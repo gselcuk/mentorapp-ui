@@ -11,10 +11,13 @@
         <div class="login-form">
           <form>
             <div class="form-group">
+              <b-alert v-model="loginFailed" variant="danger" dismissible fade>
+                Login failed !
+              </b-alert>
               <label>User Name</label>
               <input
-                required
                 v-model="userName"
+                required
                 type="text"
                 class="form-control"
                 placeholder="User Name"
@@ -23,14 +26,19 @@
             <div class="form-group">
               <label>Password</label>
               <input
-                required
                 v-model="password"
+                required
                 type="password"
                 class="form-control"
                 placeholder="Password"
               />
             </div>
-            <button type="submit" class="btn btn-black" v-on:click="login">Login</button>
+             <b-alert v-model="userNameRequired" variant="danger" dismissible fade>
+                Username and password required !
+              </b-alert>
+            <button type="submit" class="btn btn-black" v-on:click="login">
+              Login
+            </button>
           </form>
         </div>
       </div>
@@ -45,16 +53,26 @@ export default {
     return {
       msg: 'Welcome to ',
       userName: '',
-      password: ''
+      password: '',
+      loginFailed: false,
+      userNameRequired: false
     }
   },
   methods: {
-    login: function () {
+    login () {
       let userName = this.userName
       let password = this.password
-      this.$store.dispatch('login', { userName, password })
-        .then(() => this.$router.push('/list-mentor'))
-        .catch(err => console.log(err))
+
+      if (userName.length < 1 || password.length < 1) {
+        this.loginFailed = false
+        this.userNameRequired = true
+      } else {
+        this.userNameRequired = false
+        this.$store
+          .dispatch('login', { userName, password })
+          .then(() => this.$router.push('/list-mentor'))
+          .catch((err) => console.log(err), (this.loginFailed = true))
+      }
     }
   }
 }

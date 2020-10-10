@@ -19,6 +19,7 @@
     "bootstrap": "^4.5.2",
     "bootstrap-vue": "^2.17.3",
     "portal-vue": "^2.1.7",
+    "vee-validate": "^3.4.0",
     "vue": "^2.6.12",
     "vue-material": "^1.0.0-beta-15",
     "vue-router": "^3.0.1",

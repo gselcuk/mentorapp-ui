@@ -9,16 +9,16 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
   		status: '',
-  		token: localStorage.getItem('token') || '',
+  		id: localStorage.getItem('id') || '',
   		user: {}
   },
   mutations: {
     auth_request (state) {
 	    	state.status = 'loading'
 	  	},
-	  	auth_success (state, token, user) {
+	  	auth_success (state, id, user) {
 		    state.status = 'success'
-		    state.token = token
+		    state.id = id
 		    state.user = user
 	  	},
 	  	auth_error (state) {
@@ -26,7 +26,7 @@ export default new Vuex.Store({
 	  	},
 	  	logout (state) {
 	    	state.status = ''
-	    	state.token = ''
+	    	state.id = ''
 	  	}
   },
   actions: {
@@ -40,8 +40,12 @@ export default new Vuex.Store({
           }})
 	            .then(resp => {
 	                const id = resp.data.id
-	                const userName = resp.data.userName
-	                localStorage.setItem('id', id)
+            const userName = resp.data.userName
+            const userRole = resp.data.userRole
+
+            localStorage.setItem('id', id)
+            localStorage.setItem('userRole', userRole)
+
 	                commit('auth_success', id, userName)
 	                resolve(resp)
 	            })
