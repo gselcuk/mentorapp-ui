@@ -2,10 +2,8 @@
   <div>
     <div class="sidenav">
       <div class="login-main-text">
-        <h1>
-          {{ msg }}<br />
-        </h1>
--        <img src="../assets/logo-white.png" />
+        <h1>{{ msg }}<br /></h1>
+        - <img src="../assets/logo-white.png" />
       </div>
     </div>
     <div class="main">
@@ -14,17 +12,25 @@
           <form>
             <div class="form-group">
               <label>User Name</label>
-              <input type="text" class="form-control" placeholder="User Name" />
+              <input
+                required
+                v-model="userName"
+                type="text"
+                class="form-control"
+                placeholder="User Name"
+              />
             </div>
             <div class="form-group">
               <label>Password</label>
               <input
+                required
+                v-model="password"
                 type="password"
                 class="form-control"
                 placeholder="Password"
               />
             </div>
-            <button type="submit" class="btn btn-black">Login</button>
+            <button type="submit" class="btn btn-black" v-on:click="login">Login</button>
           </form>
         </div>
       </div>
@@ -37,7 +43,18 @@ export default {
   name: 'MentorAppIndex',
   data () {
     return {
-      msg: 'Welcome to '
+      msg: 'Welcome to ',
+      userName: '',
+      password: ''
+    }
+  },
+  methods: {
+    login: function () {
+      let userName = this.userName
+      let password = this.password
+      this.$store.dispatch('login', { userName, password })
+        .then(() => this.$router.push('/list-mentor'))
+        .catch(err => console.log(err))
     }
   }
 }
@@ -45,7 +62,7 @@ export default {
 
 <style scoped>
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto";
 }
 
 .main-head {
