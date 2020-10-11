@@ -1,30 +1,23 @@
 <template>
   <div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="/">
-        <div class="logo-image">
-          <img src="../../assets/logo-icon-dark.png" class="img-fluid" />
-        </div>
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+      <a class="navbar-brand">
+        <img src="../../assets/logo-icon.png" height="28" alt="CoolBrand" />
       </a>
       <button
-        class="navbar-toggler"
         type="button"
+        class="navbar-toggler"
         data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
+        data-target="#navbarCollapse"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#"
-              >Home <span class="sr-only">(current)</span></a
-            >
-          </li>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav">
+          <a href="#" class="nav-item nav-link">Home</a>
+          <a href="#" class="nav-item nav-link">Profile</a>
+          <a href="#" class="nav-item nav-link">Messages</a>
           <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle"
@@ -35,50 +28,43 @@
               aria-haspopup="true"
               aria-expanded="false"
             >
-              Relation Management
+              Relation
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a
-                class="dropdown-item"
-                href="#"
-                v-if="userRole == 'MENTOR_NORMAL' || userRole == 'USER'"
-                >Find Mentee</a
+              <a class="dropdown-item" href="#" v-if="userRole != 'USER'"
+                >Be Mentor</a
               >
-              <a
-                class="dropdown-item"
-                href="#"
-                v-if="userRole == 'MENTEE_NORMAL' || userRole == 'USER'"
-                >Find Mentor</a
-              >
+              <a class="dropdown-item" href="#">Find Mentor</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
+              <a class="dropdown-item" href="#">Join Mentor Group</a>
+              <a class="dropdown-item" href="#">Join Mentee Group</a>
             </div>
           </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input
-            class="form-control mr-sm-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-            Search
+        </div>
+        <div class="navbar-nav ml-auto">
+          <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" v-on:click="logout">
+            Logout
           </button>
-        </form>
+        </div>
       </div>
     </nav>
   </div>
 </template>
 <script>
-import UserAuthenticate from '../../UserAuthenticate'
-
 export default {
   name: 'ListMentor',
   data () {
     return {
-      msg: 'Login Success ' + UserAuthenticate.getters.user.id,
-      userRole: UserAuthenticate.getters.user.userRole
+      msg: 'Login Success ' + localStorage.getItem('id'),
+      userRole: localStorage.getItem('userRole')
+    }
+  },
+  methods: {
+    logout () {
+      this.$store
+        .dispatch('logout')
+        .then(() => this.$router.push('/'))
+        .catch((err) => console.log(err))
     }
   }
 }
@@ -88,5 +74,8 @@ export default {
   width: 80px;
   height: 40px;
   overflow: hidden;
+}
+.navbar {
+  font-family: Verdana !important;
 }
 </style>

@@ -9,17 +9,15 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     status: '',
-    id: localStorage.getItem('id') || '',
-    user: {}
+    id: localStorage.getItem('id')
   },
   mutations: {
     auth_request (state) {
       state.status = 'loading'
     },
-    auth_success (state, id, user) {
+    auth_success (state, id) {
       state.status = 'success'
       state.id = id
-      state.user = user
     },
     auth_error (state) {
       state.status = 'error'
@@ -43,11 +41,14 @@ export default new Vuex.Store({
         })
           .then(resp => {
             const id = resp.data.id
-            const userName = resp.data.userName
             const userRole = resp.data.userRole
+            const userName = resp.data.userName
+            const isAdmin = resp.data.isAdmin
 
             localStorage.setItem('id', id)
             localStorage.setItem('userRole', userRole)
+            localStorage.setItem('userName', userName)
+            localStorage.setItem('isAdmin', isAdmin)
 
             commit('auth_success', id, userName)
             resolve(resp)
@@ -62,14 +63,14 @@ export default new Vuex.Store({
     logout ({ commit }) {
       return new Promise((resolve, reject) => {
         commit('logout')
-        localStorage.removeItem('token')
+        localStorage.removeItem('id')
         delete axios.defaults.headers.common['Authorization']
         resolve()
       })
     }
   },
   getters: {
-    isLoggedIn: state => !!state.token,
+    isLoggedIn: state => !state.id,
     authStatus: state => state.status
   }
 })
