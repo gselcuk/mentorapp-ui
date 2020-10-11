@@ -15,7 +15,7 @@
 
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav">
-          <a href="#" class="nav-item nav-link">Home</a>
+          <a href="#" class="nav-item nav-link">Profile</a>
           <a href="#" class="nav-item nav-link">Messages</a>
           <li class="nav-item dropdown">
             <a
@@ -41,7 +41,7 @@
           </li>
         </div>
         <div class="navbar-nav ml-auto">
-          <a href="#" class="nav-item nav-link">Welcome {{userName}} !</a>
+          <a class="nav-item nav-link d-none d-lg-block">Welcome {{userName}} !</a>
           <br>
           <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" v-on:click="logout">
             Logout

@@ -5,8 +5,8 @@
       <p class="lead">
         You aren't still mentor or mentee Let's start with deciding.
       </p>
-      <a class="btn btn-light btn-lg" href="#" role="button">Be Mentor</a>
-      <a class="btn btn-light btn-lg" href="#" role="button">Be Mentee</a>
+      <button class="btn btn-light btn-lg" role="button" v-on:click="beMentor">Be Mentor</button>
+      <button class="btn btn-light btn-lg" role="button">Be Mentee</button>
     </div>
   </div>
 </template>
@@ -16,6 +16,11 @@ export default {
   data () {
     return {
       userName: localStorage.getItem('userName')
+    }
+  },
+  methods: {
+    beMentor () {
+      this.$router.push('/be-mentor')
     }
   }
 }

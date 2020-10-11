@@ -21,8 +21,10 @@
     "portal-vue": "^2.1.7",
     "vee-validate": "^3.4.0",
     "vue": "^2.6.12",
+    "vue-draggable": "^2.0.6",
     "vue-material": "^1.0.0-beta-15",
     "vue-router": "^3.0.1",
+    "vuedraggable": "^2.24.1",
     "vuex": "^3.5.1"
   },
   "devDependencies": {

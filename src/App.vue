@@ -12,10 +12,23 @@ export default {
 
 <style>
 #app {
-  font-family: 'Roboto';
+  font-family: 'Josefin Slab', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.jumbotron {
+  height: 94vh;
+  background-color: #00a3e0;
+  width: 100%;
+  color: white;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 10px 0;
+  align-items: center;
+  justify-content: space-around;
+  display: flex;
+  float: none;
 }
 </style>

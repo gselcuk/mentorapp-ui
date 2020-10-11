@@ -5,6 +5,7 @@ import ListMentor from '@/components/list-mentor/ListMentor'
 import PortalVue from 'portal-vue'
 import { BootstrapVue, AlertPlugin, BAlert } from 'bootstrap-vue'
 import UserAuthenticate from '../UserAuthenticate.js'
+import BeMentor from '@/components/be-mentor/BeMentor'
 
 Vue.use(AlertPlugin)
 Vue.use(Router)
@@ -23,6 +24,14 @@ let router = new Router({
       path: '/list-mentor',
       name: 'Listmentor',
       component: ListMentor,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/be-mentor',
+      name: 'BeMentor',
+      component: BeMentor,
       meta: {
         requiresAuth: true
       }

@@ -8,7 +8,6 @@
 export default {
   data () {
     return {
-      userRole: localStorage.getItem('userRole'),
       userName: localStorage.getItem('userName'),
       isAdmin: localStorage.getItem('isAdmin') === true,
       isUser: localStorage.getItem('userRole') === 'USER',
@@ -22,19 +21,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.jumbotron {
-  font-family: Verdana !important;
-  height: 94vh;
-  background-color: #00a3e0;
-  width: 100%;
-  color: white;
-  margin: 0 auto;
-  overflow: hidden;
-  padding: 10px 0;
-  align-items: center;
-  justify-content: space-around;
-  display: flex;
-  float: none;
-}
-</style>
