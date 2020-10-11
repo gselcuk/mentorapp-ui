@@ -33,12 +33,24 @@
                 placeholder="Password"
               />
             </div>
-             <b-alert v-model="userNameRequired" variant="danger" dismissible fade>
-                Username and password required !
-              </b-alert>
-            <button type="submit" class="btn btn-black" v-on:click="login">
+            <b-alert
+              v-model="userNameRequired"
+              variant="danger"
+              dismissible
+              fade
+            >
+              Username and password required !
+            </b-alert>
+            <button type="submit" class="btn btn-black" v-on:click="login" v-show = "isShow">
               Login
             </button>
+            <div
+              class="spinner-border"
+              style="width: 3rem; height: 3rem"
+              role="status"
+              v-show = "!isShow"
+            >
+            </div>
           </form>
         </div>
       </div>
@@ -47,6 +59,8 @@
 </template>
 
 <script>
+import UserAuthenticate from '../UserAuthenticate.js'
+
 export default {
   name: 'MentorAppIndex',
   data () {
@@ -55,7 +69,9 @@ export default {
       userName: '',
       password: '',
       loginFailed: false,
-      userNameRequired: false
+      userNameRequired: false,
+      state: UserAuthenticate.state,
+      isShow: true
     }
   },
   methods: {
@@ -67,11 +83,16 @@ export default {
         this.loginFailed = false
         this.userNameRequired = true
       } else {
+        this.isShow = false
         this.userNameRequired = false
         this.$store
           .dispatch('login', { userName, password })
           .then(() => this.$router.push('/list-mentor'))
-          .catch((err) => console.log(err), (this.loginFailed = true))
+          .catch((err) => {
+            console.log(err)
+            this.loginFailed = true
+            this.isShow = true
+          })
       }
     }
   }

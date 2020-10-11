@@ -22,7 +22,10 @@ let router = new Router({
     {
       path: '/list-mentor',
       name: 'Listmentor',
-      component: ListMentor
+      component: ListMentor,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })
@@ -32,7 +35,7 @@ router.beforeEach((to, from, next) => {
       next()
       return
     }
-    next('/login')
+    next({ name: 'MentorAppIndex' })
   } else {
     next()
   }

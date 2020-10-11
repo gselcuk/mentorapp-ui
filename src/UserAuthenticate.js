@@ -64,13 +64,16 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit('logout')
         localStorage.removeItem('id')
+        localStorage.removeItem('userRole')
+        localStorage.removeItem('userName')
+        localStorage.removeItem('isAdmin')
         delete axios.defaults.headers.common['Authorization']
         resolve()
       })
     }
   },
   getters: {
-    isLoggedIn: state => !state.id,
+    isLoggedIn: state => state.id,
     authStatus: state => state.status
   }
 })
