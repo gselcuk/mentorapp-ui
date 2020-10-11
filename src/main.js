@@ -6,11 +6,13 @@ import router from './router'
 import Axios from 'axios'
 import store from './UserAuthenticate'
 import AppNavbar from './components/navbar/Navbar'
+import ListMentorUser from './components/list-mentor/ListMentorUser'
 
 Vue.prototype.$http = Axios
 
 Vue.config.productionTip = false
 Vue.component('v-navbar', AppNavbar)
+Vue.component('v-list-mentor-user', ListMentorUser)
 
 const token = localStorage.getItem('token')
 if (token) {
