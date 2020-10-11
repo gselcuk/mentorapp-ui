@@ -4,8 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Axios from 'axios'
-import store from './store'
-import VeeValidate from 'vee-validate'
+import store from './UserAuthenticate'
 
 Vue.prototype.$http = Axios
 
@@ -22,13 +21,4 @@ new Vue({
   store,
   components: { App },
   template: '<App/>'
-})
-
-Vue.use(VeeValidate, {
-  // This is the default
-  inject: true,
-  // Important to name this something other than 'fields'
-  fieldsBagName: 'veeFields',
-  // This is not required but avoids possible naming conflicts
-  errorBagName: 'veeErrors'
 })

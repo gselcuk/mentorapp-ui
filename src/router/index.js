@@ -4,26 +4,8 @@ import MentorAppIndex from '@/components/MentorAppIndex'
 import ListMentor from '@/components/list-mentor/ListMentor'
 import PortalVue from 'portal-vue'
 import { BootstrapVue, AlertPlugin, BAlert } from 'bootstrap-vue'
-import store from '../store.js'
-import {
-  ValidationObserver,
-  ValidationProvider,
-  extend,
-  localize
-} from 'vee-validate'
-import en from 'vee-validate/dist/locale/en.json'
-import * as rules from 'vee-validate/dist/rules'
+import UserAuthenticate from '../UserAuthenticate.js'
 
-// Install VeeValidate rules and localization
-Object.keys(rules).forEach(rule => {
-  extend(rule, rules[rule])
-})
-
-localize('en', en)
-
-// Install VeeValidate components globally
-Vue.component('ValidationObserver', ValidationObserver)
-Vue.component('ValidationProvider', ValidationProvider)
 Vue.use(AlertPlugin)
 Vue.use(Router)
 Vue.use(PortalVue)
@@ -46,7 +28,7 @@ let router = new Router({
 })
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn) {
+    if (UserAuthenticate.getters.isLoggedIn) {
       next()
       return
     }
