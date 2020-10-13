@@ -152,6 +152,7 @@ export default {
       this.allExpertises.length = 0
       this.databaseList.forEach((element) => {
         if (!this.yourExpertises.includes(element)) {
+          element.category = 'DTB'
           this.allExpertises.push(element)
         }
       })
@@ -159,6 +160,7 @@ export default {
     fillProgrammingLanguages: function (evt) {
       this.allExpertises.length = 0
       this.languageList.forEach((element) => {
+        element.category = 'LNG'
         if (!this.yourExpertises.includes(element)) {
           this.allExpertises.push(element)
         }
@@ -167,6 +169,8 @@ export default {
     fillFrameworks: function (evt) {
       this.allExpertises.length = 0
       this.frameworkList.forEach((element) => {
+        element.category = 'FRM'
+
         if (!this.yourExpertises.includes(element)) {
           this.allExpertises.push(element)
         }
@@ -175,6 +179,7 @@ export default {
     fillOthers: function (evt) {
       this.allExpertises.length = 0
       this.otherList.forEach((element) => {
+        element.category = 'OTH'
         if (!this.yourExpertises.includes(element)) {
           this.allExpertises.push(element)
         }
