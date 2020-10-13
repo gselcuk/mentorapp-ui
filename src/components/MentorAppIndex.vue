@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import UserAuthenticate from '../UserAuthenticate.js'
+import store from '../state/store'
 
 export default {
   name: 'MentorAppIndex',
@@ -70,7 +70,7 @@ export default {
       password: '',
       loginFailed: false,
       userNameRequired: false,
-      state: UserAuthenticate.state,
+      state: store.state,
       isShow: true
     }
   },

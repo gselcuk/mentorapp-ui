@@ -4,8 +4,9 @@ import MentorAppIndex from '@/components/MentorAppIndex'
 import ListMentor from '@/components/list-mentor/ListMentor'
 import PortalVue from 'portal-vue'
 import { BootstrapVue, AlertPlugin, BAlert } from 'bootstrap-vue'
-import UserAuthenticate from '../UserAuthenticate.js'
+import store from '../state/store.js'
 import BeMentor from '@/components/be-mentor/BeMentor'
+import FinalizeBeMentor from '@/components/be-mentor/FinalizeBeMentor'
 
 Vue.use(AlertPlugin)
 Vue.use(Router)
@@ -35,12 +36,20 @@ let router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '/finalize-be-mentor',
+      name: 'FinalizeBeMentor',
+      component: FinalizeBeMentor,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (UserAuthenticate.getters.isLoggedIn) {
+    if (store.getters.isLoggedIn) {
       next()
       return
     }

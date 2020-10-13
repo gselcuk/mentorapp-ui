@@ -2,20 +2,55 @@
   <div>
     <v-navbar></v-navbar>
     <div class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <h1 class="display-6">Choose your expertises</h1>
-        <div class="row">
+      <div class="container mt-4">
+        <h1 class="display-6">
+          Choose your expertises from All Expertises and drag to Your Expertises
+        </h1>
+        <div class="btn-group mt-4" role="group" aria-label="Basic example">
+          <b-button
+            type="button"
+            class="btn btn-secondary"
+            variant="dark"
+            v-on:click="fillDatabase"
+            >Database</b-button
+          >
+          <b-button
+            type="button"
+            class="btn btn-secondary"
+            variant="dark"
+            v-on:click="fillProgrammingLanguages"
+          >
+            Programming Languages
+          </b-button>
+          <b-button
+            type="button"
+            class="btn btn-secondary"
+            variant="dark"
+            v-on:click="fillFrameworks"
+          >
+            Javascript Frameworks
+          </b-button>
+          <b-button
+            type="button"
+            class="btn btn-secondary"
+            variant="dark"
+            v-on:click="fillOthers"
+          >
+            Others
+          </b-button>
+        </div>
+        <div class="row mt-4">
           <div class="col-6">
             <h3>Your Expertises</h3>
             <draggable
               class="list-group"
-              :list="list1"
+              :list="yourExpertises"
               group="people"
               @change="log"
             >
               <div
                 class="list-group-item"
-                v-for="(element) in list1"
+                v-for="element in yourExpertises"
                 :key="element.name"
               >
                 {{ element.name }}
@@ -27,13 +62,13 @@
             <h3>All Expertises</h3>
             <draggable
               class="list-group"
-              :list="list2"
+              :list="allExpertises"
               group="people"
               @change="log"
             >
               <div
                 class="list-group-item"
-                v-for="(element) in list2"
+                v-for="element in allExpertises"
                 :key="element.name"
               >
                 {{ element.name }}
@@ -41,47 +76,124 @@
             </draggable>
           </div>
         </div>
+        <div class="col-12">
+          <b-button
+            class="mt-4"
+            pill
+            size="lg"
+            variant="dark"
+            v-on:click="saveExpertise"
+            >Next</b-button
+          >
+          <b-alert
+            v-model="emptyExpertiseList"
+            variant="danger"
+            dismissible
+            fade
+            class="mt-4"
+          >
+            Your Expertises Empty ! Please Choose at Least 1 Expertise.
+          </b-alert>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 import draggable from 'vuedraggable'
+import expertises from '../../state/expertises'
 
 export default {
   name: 'BeMentor',
-  display: 'Two BeMentor',
+  display: 'Be Mentor',
   order: 1,
   components: {
     draggable
   },
   data () {
     return {
-      list1: [
-
+      emptyExpertiseList: false,
+      yourExpertises: [],
+      allExpertises: [{ name: 'Choose expertise from above', id: 0 }],
+      languageList: [
+        { name: 'Java', id: 8 },
+        { name: '.NET', id: 9 },
+        { name: 'C', id: 10 },
+        { name: 'C++', id: 11 },
+        { name: 'COBOL', id: 12 }
       ],
-      list2: [
-        { name: 'Java', id: 1 },
-        { name: '.NET', id: 2 },
-        { name: 'nodeJS', id: 3 },
-        { name: 'vueJS', id: 4 },
-        { name: 'Angular', id: 1 },
-        { name: 'Oracle', id: 2 },
-        { name: 'CouchBase', id: 3 },
-        { name: 'NoSQL', id: 4 },
-        { name: 'Reactive Programming', id: 1 }
+      frameworkList: [
+        { name: 'nodeJs', id: 13 },
+        { name: 'vueJs', id: 14 },
+        { name: 'Angular', id: 15 },
+        { name: 'React', id: 16 }
+      ],
+      databaseList: [
+        { name: 'Oracle', id: 17 },
+        { name: 'Couchbase', id: 18 },
+        { name: 'MongoDB', id: 19 },
+        { name: 'CassandraDB', id: 20 },
+        { name: 'DynamoDB', id: 21 }
+      ],
+      otherList: [
+        { name: 'Apache Kafka', id: 22 },
+        { name: 'Redis', id: 23 },
+        { name: 'RabbitMQ', id: 24 },
+        { name: 'Docker', id: 25 },
+        { name: 'Jenkins', id: 26 }
       ]
     }
   },
   methods: {
     log: function (evt) {
       window.console.log(evt)
+    },
+    fillDatabase: function (evt) {
+      this.allExpertises.length = 0
+      this.databaseList.forEach((element) => {
+        if (!this.yourExpertises.includes(element)) {
+          this.allExpertises.push(element)
+        }
+      })
+    },
+    fillProgrammingLanguages: function (evt) {
+      this.allExpertises.length = 0
+      this.languageList.forEach((element) => {
+        if (!this.yourExpertises.includes(element)) {
+          this.allExpertises.push(element)
+        }
+      })
+    },
+    fillFrameworks: function (evt) {
+      this.allExpertises.length = 0
+      this.frameworkList.forEach((element) => {
+        if (!this.yourExpertises.includes(element)) {
+          this.allExpertises.push(element)
+        }
+      })
+    },
+    fillOthers: function (evt) {
+      this.allExpertises.length = 0
+      this.otherList.forEach((element) => {
+        if (!this.yourExpertises.includes(element)) {
+          this.allExpertises.push(element)
+        }
+      })
+    },
+    saveExpertise: function () {
+      this.yourExpertises = this.yourExpertises.filter(expertise => expertise.id !== 0)
+      if (this.yourExpertises.length < 1) {
+        this.emptyExpertiseList = true
+      } else {
+        expertises.state = this.yourExpertises
+        this.$router.push('/finalize-be-mentor')
+      }
     }
   }
 }
 </script>
 <style scoped>
-.list-group-item{
-    color: black;
+.list-group-item {
+  color: black;
 }
 </style>

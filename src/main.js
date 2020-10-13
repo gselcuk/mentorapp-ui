@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Axios from 'axios'
-import store from './UserAuthenticate'
+import store from './state/store'
 import AppNavbar from './components/navbar/Navbar'
 import ListMentorUser from './components/list-mentor/ListMentorUser'
 
