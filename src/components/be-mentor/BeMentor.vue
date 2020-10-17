@@ -152,7 +152,7 @@ export default {
       this.allExpertises.length = 0
       this.databaseList.forEach((element) => {
         if (!this.yourExpertises.includes(element)) {
-          element.category = 'DTB'
+          element.category = 'Database'
           this.allExpertises.push(element)
         }
       })
@@ -160,7 +160,7 @@ export default {
     fillProgrammingLanguages: function (evt) {
       this.allExpertises.length = 0
       this.languageList.forEach((element) => {
-        element.category = 'LNG'
+        element.category = 'Language'
         if (!this.yourExpertises.includes(element)) {
           this.allExpertises.push(element)
         }
@@ -169,7 +169,7 @@ export default {
     fillFrameworks: function (evt) {
       this.allExpertises.length = 0
       this.frameworkList.forEach((element) => {
-        element.category = 'FRM'
+        element.category = 'Framework'
 
         if (!this.yourExpertises.includes(element)) {
           this.allExpertises.push(element)
@@ -179,7 +179,7 @@ export default {
     fillOthers: function (evt) {
       this.allExpertises.length = 0
       this.otherList.forEach((element) => {
-        element.category = 'OTH'
+        element.category = 'Other'
         if (!this.yourExpertises.includes(element)) {
           this.allExpertises.push(element)
         }
