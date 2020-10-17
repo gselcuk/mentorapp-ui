@@ -22,7 +22,7 @@
                   <b-form-textarea
                     id="textarea-default"
                     placeholder="Enter Description"
-                    v-model = "description"
+                    v-model="element.description"
                   ></b-form-textarea>
                 </b-col>
               </b-row>
@@ -30,7 +30,7 @@
                 <label for="tags-pills">Enter tags</label>
                 <b-form-tags
                   input-id="tags-pills"
-                  v-model="value"
+                  v-model="element.keywords"
                   tag-variant="primary"
                   tag-pills
                   size="lg"
@@ -50,6 +50,9 @@
             v-on:click="saveExpertise"
             >Save</b-button
           >
+          <b-alert v-model="isSaveFailed" variant="danger" dismissible fade>
+            Save operation failed!
+          </b-alert>
         </div>
       </div>
     </div>
@@ -57,6 +60,7 @@
 </template>
 <script>
 import expertises from '../../state/expertises'
+import axios from 'axios'
 
 export default {
   name: 'FinalizeBeMentor',
@@ -66,7 +70,11 @@ export default {
   data () {
     return {
       yourExpertises: expertises.state,
-      description: ''
+      description: '',
+      request: {},
+      expertises: [],
+      expertise: {},
+      isSaveFailed: false
     }
   },
   methods: {
@@ -74,14 +82,40 @@ export default {
       if (this.yourExpertises.length < 1) {
         this.$router.push('/be-mentor')
       }
+    },
+    saveExpertise () {
+      this.request.mentorGroupId = localStorage.getItem('id')
+      this.request.expertiseAreas = []
+      this.yourExpertises.forEach((element) => {
+        this.expertise = {}
+        this.expertise.category = element.category
+        this.expertise.expertiseName = element.name
+        this.expertise.expertiseDescription = element.description
+        element.keywords.forEach((keyword) => {
+          this.expertise.keywords = []
+          this.expertise.keywords.push(keyword)
+        })
+        this.request.expertiseAreas.push(this.expertise)
+      })
+
+      return new Promise((resolve, reject) => {
+        axios({
+          url: 'http://localhost:8080/expertise/save/',
+          data: this.request,
+          method: 'POST'
+        })
+          .then((resp) => {
+            resolve(resp)
+          })
+          .catch((err) => {
+            console.log(err)
+            this.isSaveFailed = true
+          })
+      })
+    },
+    beforeMount () {
+      this.checkExpertises()
     }
-  },
-  addDescription (expertise) {
-    expertise.description = this.description
-  },
-  saveExpertise () {},
-  beforeMount () {
-    this.checkExpertises()
   }
 }
 </script>
