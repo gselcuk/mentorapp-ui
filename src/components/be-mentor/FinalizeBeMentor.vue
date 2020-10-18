@@ -109,7 +109,8 @@ export default {
           method: 'POST'
         })
           .then((resp) => {
-            this.$router.push('/list-mentor-mentor')
+            localStorage.setItem('userRole', 'MENTOR_GROUP_LEADER')
+            this.$router.push('/list-mentor')
           })
           .catch((err) => {
             console.log(err)
