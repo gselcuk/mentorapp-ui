@@ -2,6 +2,7 @@
   <div>
     <v-navbar></v-navbar>
     <v-list-mentor-user v-if="isUser"></v-list-mentor-user>
+    <v-list-mentor-mentor v-if="isMentor"></v-list-mentor-mentor>
   </div>
 </template>
 <script>

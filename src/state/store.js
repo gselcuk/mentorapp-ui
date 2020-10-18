@@ -29,6 +29,7 @@ export default new Vuex.Store({
   },
   actions: {
     login ({ commit }, user) {
+      const token = btoa(unescape(encodeURIComponent(user.userName + ':' + user.password)))
       return new Promise((resolve, reject) => {
         commit('auth_request')
         axios({
@@ -36,7 +37,7 @@ export default new Vuex.Store({
           data: user,
           method: 'POST',
           headers: {
-            Authorization: 'Basic ' + btoa(unescape(encodeURIComponent(user.userName + ':' + user.password)))
+            Authorization: 'Basic ' + token
           }
         })
           .then(resp => {
@@ -49,7 +50,7 @@ export default new Vuex.Store({
             localStorage.setItem('userRole', userRole)
             localStorage.setItem('userName', userName)
             localStorage.setItem('isAdmin', isAdmin)
-
+            localStorage.setItem('authToken', token)
             commit('auth_success', id, userName)
             resolve(resp)
           })

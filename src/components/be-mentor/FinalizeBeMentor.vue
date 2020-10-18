@@ -84,20 +84,24 @@ export default {
       }
     },
     saveExpertise () {
-      this.request.mentorGroupId = localStorage.getItem('id')
-      this.request.expertiseAreas = []
+      this.request.groupExpertiseRelation = {}
+      this.request.groupExpertiseRelation.mentorGroupId = localStorage.getItem('id')
+      this.request.groupExpertiseRelation.expertiseAreas = []
       this.yourExpertises.forEach((element) => {
         this.expertise = {}
         this.expertise.category = element.category
         this.expertise.expertiseName = element.name
-        this.expertise.expertiseDescription = element.description
-        element.keywords.forEach((keyword) => {
-          this.expertise.keywords = []
-          this.expertise.keywords.push(keyword)
-        })
-        this.request.expertiseAreas.push(this.expertise)
+        if (element.description) { this.expertise.expertiseDescription = element.description }
+        if (element.keywords) {
+          element.keywords.forEach((keyword) => {
+            this.expertise.keywords = []
+            this.expertise.keywords.push(keyword)
+          })
+        }
+        this.request.groupExpertiseRelation.expertiseAreas.push(this.expertise)
       })
 
+      this.request.authToken = localStorage.getItem('authToken')
       return new Promise((resolve, reject) => {
         axios({
           url: 'http://localhost:8080/expertise/save/',
@@ -105,7 +109,7 @@ export default {
           method: 'POST'
         })
           .then((resp) => {
-            resolve(resp)
+            this.$router.push('/list-mentor-mentor')
           })
           .catch((err) => {
             console.log(err)

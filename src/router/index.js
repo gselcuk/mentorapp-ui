@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import MentorAppIndex from '@/components/MentorAppIndex'
 import ListMentor from '@/components/list-mentor/ListMentor'
+import ListMentorMentor from '@/components/list-mentor/ListMentorMentor'
 import PortalVue from 'portal-vue'
 import { BootstrapVue, AlertPlugin, BAlert } from 'bootstrap-vue'
 import store from '../state/store.js'
@@ -23,7 +24,7 @@ let router = new Router({
     },
     {
       path: '/list-mentor',
-      name: 'Listmentor',
+      name: 'ListMentor',
       component: ListMentor,
       meta: {
         requiresAuth: true
@@ -41,6 +42,14 @@ let router = new Router({
       path: '/finalize-be-mentor',
       name: 'FinalizeBeMentor',
       component: FinalizeBeMentor,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/list-mentor-mentor',
+      name: 'ListMentorMentor',
+      component: ListMentorMentor,
       meta: {
         requiresAuth: true
       }
