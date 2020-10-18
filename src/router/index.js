@@ -8,6 +8,7 @@ import { BootstrapVue, AlertPlugin, BAlert } from 'bootstrap-vue'
 import store from '../state/store.js'
 import BeMentor from '@/components/be-mentor/BeMentor'
 import FinalizeBeMentor from '@/components/be-mentor/FinalizeBeMentor'
+import Profile from '@/components/profile/Profile'
 
 Vue.use(AlertPlugin)
 Vue.use(Router)
@@ -50,6 +51,14 @@ let router = new Router({
       path: '/list-mentor-mentor',
       name: 'ListMentorMentor',
       component: ListMentorMentor,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Profile,
       meta: {
         requiresAuth: true
       }

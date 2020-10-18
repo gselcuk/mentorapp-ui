@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-      <a class="navbar-brand">
+      <a class="navbar-brand" href= "#/list-mentor" >
         <img src="../../assets/logo-icon.png" height="28" alt="CoolBrand" />
       </a>
       <button
@@ -15,7 +15,7 @@
 
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav">
-          <a href="#" class="nav-item nav-link">Profile</a>
+          <a href="#/profile" class="nav-item nav-link">Profile</a>
           <a href="#" class="nav-item nav-link">Messages</a>
           <li class="nav-item dropdown">
             <a
@@ -30,13 +30,12 @@
               Relation
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#" v-if="userRole != 'USER'"
+              <a class="dropdown-item" href="#" v-if="userRole == 'USER'"
                 >Be Mentor</a
               >
               <a class="dropdown-item" href="#">Find Mentor</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Join Mentor Group</a>
-              <a class="dropdown-item" href="#">Join Mentee Group</a>
+              <a class="dropdown-item" href="#" v-if="userRole == 'MENTOR_GROUP_LEADER' || userRole == 'MENTOR_NORMAL'">Join Mentor Group</a>
             </div>
           </li>
         </div>
