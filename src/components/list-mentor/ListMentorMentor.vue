@@ -19,42 +19,47 @@ export default {
   name: 'ListMentorMentor',
   data () {
     return {
-      fields: ['mentorLeaderName', 'subject', 'menteeCount', 'phase'],
-      items: [
-      ],
-      item: {},
-      reponses: []
+      fields: ['mentorLeaderName', 'subjects', 'menteeCount', 'phase'],
+      items: [],
+      item: {}
     }
   },
   methods: {
     fillData () {
       return new Promise((resolve, reject) => {
         axios({
-          url: 'http://localhost:8080/expertise/get/' + localStorage.getItem('id'),
+          url:
+            'http://localhost:8080/expertise/get/' + localStorage.getItem('authToken') + '/' + localStorage.getItem('id'),
           data: this.request,
           method: 'GET'
-        })
-          .then((resp) => {
-            this.reponses = resp.data
-            console.log(resp.data)
+        }).then((resp) => {
+          resp.data.listRelation.forEach((relation) => {
+            relation.groupExpertiseRelation.expertiseAreas.forEach(expertise => {
+              if (!this.item.subjects) { this.item.subjects = expertise.expertiseName } else { this.item.subjects = this.item.subjects + ',' + expertise.expertiseName }
+            })
+            this.item.mentorLeaderName = relation.mentorName
+            if (relation.groupExpertiseRelation.mentees !== null) {
+              this.item.menteeCount =
+                relation.groupExpertiseRelation.mentees.length
+            } else this.item.menteeCount = 0
+            this.item.phase = this.findLabel(relation.groupExpertiseRelation.relationPhase)
+            this.items.push(this.item)
           })
-      })
-        .catch((err) => {
-          console.log(err)
-          this.isSaveFailed = true
         })
+      }).catch((err) => {
+        console.log(err)
+        this.isSaveFailed = true
+      })
+    },
+    findLabel (key) {
+      if (key === 'NOT_STARTED') { return 'Not Started' }
+      if (key === 'READY') { return 'Ready' }
+      if (key === 'ONGOING') { return 'Ongoing' }
+      if (key === 'FINISHED') { return 'Finished' }
     }
   },
   beforeMount () {
     this.fillData()
-    this.responses.forEach(relation => {
-      this.item.subject = relation.groupExpertiseRelation.expertiseAreas[0].expertiseName
-      this.item.mentorLeaderName = relation.mentorName
-      this.item.menteeNumber = relation.groupExpertiseRelation.mentees.length
-      this.item.phase = relation.groupExpertiseRelation.relationPhase
-      this.items.push(this.item)
-    })
   }
 }
-
 </script>
