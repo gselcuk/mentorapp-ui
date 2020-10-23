@@ -8,6 +8,7 @@ import { BootstrapVue, AlertPlugin, BAlert } from 'bootstrap-vue'
 import store from '../state/store.js'
 import BeMentor from '@/components/be-mentor/BeMentor'
 import FinalizeBeMentor from '@/components/be-mentor/FinalizeBeMentor'
+import RelationDetail from '@/components/relation-detail/RelationDetail'
 import Profile from '@/components/profile/Profile'
 
 Vue.use(AlertPlugin)
@@ -59,6 +60,14 @@ let router = new Router({
       path: '/profile',
       name: 'Profile',
       component: Profile,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/relation-detail',
+      name: 'RelationDetail',
+      component: RelationDetail,
       meta: {
         requiresAuth: true
       }
