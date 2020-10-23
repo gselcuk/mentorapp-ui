@@ -20,9 +20,9 @@ export default {
 }
 .jumbotron {
   height: 94vh;
-  background-color: #00a3e0;
+  background-color:white;
   width: 100%;
-  color: white;
+  color: black;
   margin: 0 auto;
   overflow: hidden;
   padding: 10px 0;

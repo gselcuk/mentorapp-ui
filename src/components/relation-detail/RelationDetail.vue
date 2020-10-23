@@ -56,6 +56,7 @@
             <b-form-radio value="Finished" size="lg">Finished</b-form-radio>
           </b-form-radio-group>
         </b-form-group>
+         <b-button variant="primary" @click  ="backToList" >Save</b-button>
          <b-button variant="secondary" @click  ="backToList" >Back to List</b-button>
       </div>
     </b-jumbotron>
@@ -109,18 +110,3 @@ export default {
   }
 }
 </script>
-<style>
-.jumbotron {
-  height: 94vh;
-  background-color: white;
-  width: 100%;
-  color: black;
-  margin: 0 auto;
-  overflow: hidden;
-  padding: 10px 0;
-  align-items: center;
-  justify-content: space-around;
-  display: flex;
-  float: none;
-}
-</style>

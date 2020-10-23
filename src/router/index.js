@@ -10,6 +10,9 @@ import BeMentor from '@/components/be-mentor/BeMentor'
 import FinalizeBeMentor from '@/components/be-mentor/FinalizeBeMentor'
 import RelationDetail from '@/components/relation-detail/RelationDetail'
 import Profile from '@/components/profile/Profile'
+import Messages from '@/components/messages/Messages'
+import FindMentor from '@/components/find-mentor/FindMentor'
+import JoinMentor from '@/components/be-mentor/JoinMentor'
 
 Vue.use(AlertPlugin)
 Vue.use(Router)
@@ -68,6 +71,30 @@ let router = new Router({
       path: '/relation-detail',
       name: 'RelationDetail',
       component: RelationDetail,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/messages',
+      name: 'Messages',
+      component: Messages,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/find-mentor',
+      name: 'FindMentor',
+      component: FindMentor,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/join-mentor',
+      name: 'JoinMentor',
+      component: JoinMentor,
       meta: {
         requiresAuth: true
       }

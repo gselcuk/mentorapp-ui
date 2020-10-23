@@ -1,11 +1,11 @@
 <template>
   <div><v-navbar></v-navbar>
-  <div>PROFILE</div>
+  <div>JoinMentor</div>
   </div>
 </template>
 <script>
 export default {
-  name: 'Profile',
+  name: 'JoinMentor',
   methods: {}
 }
 </script>

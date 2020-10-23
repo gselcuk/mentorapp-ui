@@ -6,7 +6,7 @@
         You aren't still mentor or mentee Let's start with deciding.
       </p>
       <button class="btn btn-light btn-lg" role="button" v-on:click="beMentor">Be Mentor</button>
-      <button class="btn btn-light btn-lg" role="button">Be Mentee</button>
+      <button class="btn btn-light btn-lg" role="button" v-on:click="beMentee">Be Mentee</button>
     </div>
   </div>
 </template>
@@ -21,6 +21,9 @@ export default {
   methods: {
     beMentor () {
       this.$router.push('/be-mentor')
+    },
+    beMentee () {
+      this.$router.push('/find-mentor')
     }
   }
 }

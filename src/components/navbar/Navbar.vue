@@ -16,7 +16,7 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav">
           <a href="#/profile" class="nav-item nav-link">Profile</a>
-          <a href="#" class="nav-item nav-link">Messages</a>
+          <a href="#/messages" class="nav-item nav-link">Messages</a>
           <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle"
@@ -30,12 +30,12 @@
               Relation
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#" v-if="userRole == 'USER'"
+              <a class="dropdown-item" href="#/be-mentor" v-if="userRole == 'USER'"
                 >Be Mentor</a
               >
-              <a class="dropdown-item" href="#">Find Mentor</a>
+              <a class="dropdown-item" href="#/find-mentor">Find Mentor</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#" v-if="userRole == 'MENTOR_GROUP_LEADER' || userRole == 'MENTOR_NORMAL'">Join Mentor Group</a>
+              <a class="dropdown-item" href="#/join-mentor" v-if="userRole == 'MENTOR_GROUP_LEADER' || userRole == 'MENTOR_NORMAL'">Join Mentor Group</a>
             </div>
           </li>
         </div>
