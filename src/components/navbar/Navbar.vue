@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-      <a class="navbar-brand" href= "#/list-mentor" >
+      <a class="navbar-brand" href="#/list-mentor" @click="setStateList()">
         <img src="../../assets/logo-icon.png" height="28" alt="CoolBrand" />
       </a>
       <button
@@ -30,19 +30,42 @@
               Relation
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#/be-mentor" v-if="userRole == 'USER'"  @click="setState('MENTOR')"
+              <a
+                class="dropdown-item"
+                href="#/be-mentor"
+                v-if="userRole == 'USER'"
+                @click="setState('MENTOR')"
                 >Be Mentor</a
               >
-              <a class="dropdown-item" href="#/find-mentor" @click="setState('MENTEE')">Find Mentor</a>
+              <a
+                class="dropdown-item"
+                href="#/find-mentor"
+                @click="setState('MENTEE')"
+                >Find Mentor</a
+              >
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#/join-mentor" v-if="userRole == 'MENTOR_GROUP_LEADER' || userRole == 'MENTOR_NORMAL'">Join Mentor Group</a>
+              <a
+                class="dropdown-item"
+                href="#/join-mentor"
+                v-if="
+                  userRole == 'MENTOR_GROUP_LEADER' ||
+                  userRole == 'MENTOR_NORMAL'
+                "
+                >Join Mentor Group</a
+              >
             </div>
           </li>
         </div>
         <div class="navbar-nav ml-auto">
-          <a class="nav-item nav-link d-none d-lg-block">Welcome {{userName}} !</a>
-          <br>
-          <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" v-on:click="logout">
+          <a class="nav-item nav-link d-none d-lg-block"
+            >Welcome {{ userName }} !</a
+          >
+          <br />
+          <button
+            class="btn btn-outline-danger my-2 my-sm-0"
+            type="submit"
+            v-on:click="logout"
+          >
             Logout
           </button>
         </div>
@@ -52,6 +75,7 @@
 </template>
 <script>
 import usertype from '../../state/usertype'
+import listrelation from '../../state/list-relation'
 
 export default {
   name: 'ListMentor',
@@ -71,6 +95,9 @@ export default {
     },
     setState (state) {
       usertype.state = state
+    },
+    setStateList () {
+      listrelation.state = 'user'
     }
   }
 }

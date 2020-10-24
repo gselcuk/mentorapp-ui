@@ -16,7 +16,7 @@
               <b-col md="6">
                 <b-card-body title="Mentor">
                   <b-card-text>
-                    <h2 v-if="isMentor">{{ this.creatorName }}</h2>
+                    <h2 >{{ this.creatorName }}</h2>
                     <h6>{{ this.otherMentors }}</h6>
                     <h3>{{ this.subjects }}</h3>
                   </b-card-text>
@@ -30,7 +30,6 @@
               <b-col md="6">
                 <b-card-body title="Mentee">
                   <b-card-text>
-                    <h2 v-if="!isMentor">{{ this.creatorName }}</h2>
                     <h6>{{ this.otherMentees }}</h6>
                   </b-card-text>
                 </b-card-body>
@@ -79,10 +78,7 @@ export default {
       ],
       expertises: expertises.state,
       creatorName: 'Relation Creator ' + expertises.state.mentorLeaderName,
-      subjects: expertises.state.subjects,
-      isMentor:
-        localStorage.getItem('userRole') === 'MENTOR_GROUP_LEADER' ||
-        localStorage.getItem('userRole') === 'MENTOR_NORMAL'
+      subjects: expertises.state.subjects
     }
   },
   computed: {

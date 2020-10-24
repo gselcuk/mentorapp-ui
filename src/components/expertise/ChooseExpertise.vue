@@ -121,6 +121,7 @@
 import draggable from 'vuedraggable'
 import expertises from '../../state/expertises'
 import usertype from '../../state/usertype'
+import listrelation from '../../state/list-relation'
 
 export default {
   name: 'ChooseExpertise',
@@ -218,12 +219,14 @@ export default {
         if (this.isMentor) {
           this.$router.push('/finalize-be-mentor')
         } else {
+          listrelation.state = 'search'
           expertises.keywords = this.keywords
           this.$router.push('/finalize-find-mentor')
         }
       }
     },
     backToList () {
+      listrelation.state = 'user'
       this.$router.push('/list-mentor')
     }
   },

@@ -85,13 +85,17 @@ export default {
     },
     saveExpertise () {
       this.request.groupExpertiseRelation = {}
-      this.request.groupExpertiseRelation.mentorGroupId = localStorage.getItem('id')
+      this.request.groupExpertiseRelation.mentorGroupId = localStorage.getItem(
+        'id'
+      )
       this.request.groupExpertiseRelation.expertiseAreas = []
       this.yourExpertises.forEach((element) => {
         this.expertise = {}
         this.expertise.category = element.category
         this.expertise.expertiseName = element.name
-        if (element.description) { this.expertise.expertiseDescription = element.description }
+        if (element.description) {
+          this.expertise.expertiseDescription = element.description
+        }
         if (element.keywords) {
           element.keywords.forEach((keyword) => {
             this.expertise.keywords = []
@@ -126,7 +130,7 @@ export default {
 </script>
 
   <style scoped>
-  .card {
-    color: black;
-  }
-  </style>
+.card {
+  color: black;
+}
+</style>
