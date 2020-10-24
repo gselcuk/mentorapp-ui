@@ -77,7 +77,7 @@ export default {
         'show_details'
       ],
       expertises: expertises.state,
-      creatorName: 'Relation Creator ' + expertises.state.mentorLeaderName,
+      creatorName: expertises.state.mentorLeaderName,
       subjects: expertises.state.subjects
     }
   },
