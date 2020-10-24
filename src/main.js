@@ -8,6 +8,7 @@ import store from './state/store'
 import AppNavbar from './components/navbar/Navbar'
 import ListMentorUser from './components/list-mentor/ListMentorUser'
 import ListMentorMentor from './components/list-mentor/ListMentorMentor'
+import ChooseExpertise from './components/expertise/ChooseExpertise'
 
 Vue.prototype.$http = Axios
 
@@ -15,6 +16,7 @@ Vue.config.productionTip = false
 Vue.component('v-navbar', AppNavbar)
 Vue.component('v-list-mentor-user', ListMentorUser)
 Vue.component('v-list-mentor-mentor', ListMentorMentor)
+Vue.component('v-choose-expertise', ChooseExpertise)
 
 const token = localStorage.getItem('token')
 if (token) {

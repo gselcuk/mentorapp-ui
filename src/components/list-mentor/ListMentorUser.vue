@@ -11,6 +11,8 @@
   </div>
 </template>
 <script>
+import usertype from '../../state/usertype'
+
 export default {
   name: 'ListMentorUser',
   data () {
@@ -20,9 +22,11 @@ export default {
   },
   methods: {
     beMentor () {
+      usertype.state = 'MENTOR'
       this.$router.push('/be-mentor')
     },
     beMentee () {
+      usertype.state = 'MENTEE'
       this.$router.push('/find-mentor')
     }
   }

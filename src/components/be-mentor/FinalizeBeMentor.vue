@@ -125,8 +125,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.card {
-  color: black;
-}
-</style>
+  <style scoped>
+  .card {
+    color: black;
+  }
+  </style>

@@ -30,10 +30,10 @@
               Relation
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#/be-mentor" v-if="userRole == 'USER'"
+              <a class="dropdown-item" href="#/be-mentor" v-if="userRole == 'USER'"  @click="setState('MENTOR')"
                 >Be Mentor</a
               >
-              <a class="dropdown-item" href="#/find-mentor">Find Mentor</a>
+              <a class="dropdown-item" href="#/find-mentor" @click="setState('MENTEE')">Find Mentor</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#/join-mentor" v-if="userRole == 'MENTOR_GROUP_LEADER' || userRole == 'MENTOR_NORMAL'">Join Mentor Group</a>
             </div>
@@ -51,6 +51,8 @@
   </div>
 </template>
 <script>
+import usertype from '../../state/usertype'
+
 export default {
   name: 'ListMentor',
   data () {
@@ -66,6 +68,9 @@ export default {
         .dispatch('logout')
         .then(() => this.$router.push('/'))
         .catch((err) => console.log(err))
+    },
+    setState (state) {
+      usertype.state = state
     }
   }
 }

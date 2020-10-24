@@ -1,6 +1,6 @@
 <template>
   <div><v-navbar></v-navbar>
-  <div>FindMentor</div>
+  <v-choose-expertise></v-choose-expertise>
   </div>
 </template>
 <script>
