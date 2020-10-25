@@ -4,6 +4,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import URL_CONSTANT from '../URL_CONSTANT'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -33,7 +34,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit('auth_request')
         axios({
-          url: 'http://localhost:8080/user/authenticate/',
+          url: URL_CONSTANT.USER_AUTH,
           data: user,
           method: 'POST',
           headers: {

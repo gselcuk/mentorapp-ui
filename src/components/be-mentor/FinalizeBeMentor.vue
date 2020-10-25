@@ -61,6 +61,7 @@
 <script>
 import expertises from '../../state/expertises'
 import axios from 'axios'
+import URL_CONSTANT from '../../URL_CONSTANT'
 
 export default {
   name: 'FinalizeBeMentor',
@@ -108,7 +109,7 @@ export default {
       this.request.authToken = localStorage.getItem('authToken')
       return new Promise((resolve, reject) => {
         axios({
-          url: 'http://localhost:8080/expertise/save/',
+          url: URL_CONSTANT.BE_MENTOR,
           data: this.request,
           method: 'POST'
         })

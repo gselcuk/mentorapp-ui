@@ -26,9 +26,25 @@
         </b-button>
       </template>
     </b-table>
-    <b-button class="mt-4" pill size="lg" variant="dark" v-if = "search" v-on:click="backToFindMentor"
-      >Back</b-button
+    <div class="d-flex justify-content-center">
+    <b-button-toolbar
+      class="col-md-2"
+      key-nav
+      v-if="search"
+      aria-label="Toolbar with button groups"
     >
+      <b-button-group class="mx-1">
+      <b-button>&lsaquo;</b-button>
+      </b-button-group>
+      <b-button-group class="mx-1">
+        <b-button variant="dark"  v-on:click="backToFindMentor"
+          >Back</b-button>
+      </b-button-group>
+      <b-button-group class="mx-1">
+        <b-button>&rsaquo;</b-button>
+      </b-button-group>
+    </b-button-toolbar>
+    </div>
   </div>
 </template>
 <script>
@@ -36,6 +52,7 @@ import axios from 'axios'
 import personexpertises from '../../state/person-expertises'
 import listrelation from '../../state/list-relation'
 import expertises from '../../state/expertises'
+import URL_CONSTANT from '../../URL_CONSTANT'
 
 export default {
   name: 'ListMentorMentor',
@@ -70,6 +87,8 @@ export default {
         }).then((resp) => {
           resp.data.listRelation.forEach((relation) => {
             relation.expertiseAreas.forEach((expertise) => {
+              this.item.expertiseAreas = []
+              this.item.expertiseAreas.push(expertise)
               if (!this.item.subjects) {
                 this.item.subjects = expertise.expertiseName
               } else {
@@ -77,6 +96,7 @@ export default {
                   this.item.subjects + ',' + expertise.expertiseName
               }
             })
+            this.item.mentorGroupId = relation.mentorGroupId
             this.item.otherMentors = relation.otherMentors
             this.item.otherMentees = relation.otherMentees
             this.item.mentorLeaderName = relation.mentorName
@@ -95,9 +115,13 @@ export default {
             this.isBusy = false
           })
         })
-      }).catch((err) => {
-        console.log(err)
       })
+        .catch((err) => {
+          console.log(err)
+        })
+        .finally(() => {
+          this.isBusy = false
+        })
     },
     findLabel (key) {
       if (key === 'NOT_STARTED') {
@@ -121,7 +145,7 @@ export default {
   beforeMount () {
     if (listrelation.state === 'search') {
       this.url =
-        'http://localhost:8080/expertise/search/' +
+        URL_CONSTANT.SEARCH_EXPERTISE +
         localStorage.getItem('authToken')
       this.method = 'POST'
       this.request.expertiseNames = []
@@ -130,7 +154,7 @@ export default {
       })
     } else {
       this.url =
-        'http://localhost:8080/expertise/get/' +
+        URL_CONSTANT.GET_EXPERTISE +
         localStorage.getItem('authToken') +
         '/' +
         localStorage.getItem('id')
