@@ -47,6 +47,14 @@
             pill
             size="lg"
             variant="dark"
+            v-on:click="backToBeMentor"
+            >Back</b-button
+          >
+          <b-button
+            class="mt-4"
+            pill
+            size="lg"
+            variant="dark"
             v-on:click="saveExpertise"
             >Save</b-button
           >
@@ -61,7 +69,7 @@
 <script>
 import expertises from '../../state/expertises'
 import axios from 'axios'
-import URL_CONSTANT from '../../URL_CONSTANT'
+import UrlConstant from '../../UrlConstant'
 
 export default {
   name: 'FinalizeBeMentor',
@@ -79,6 +87,9 @@ export default {
     }
   },
   methods: {
+    backToBeMentor () {
+      this.$router.push('/be-mentor')
+    },
     checkExpertises () {
       if (this.yourExpertises.length < 1) {
         this.$router.push('/be-mentor')
@@ -109,7 +120,7 @@ export default {
       this.request.authToken = localStorage.getItem('authToken')
       return new Promise((resolve, reject) => {
         axios({
-          url: URL_CONSTANT.BE_MENTOR,
+          url: UrlConstant.BE_MENTOR,
           data: this.request,
           method: 'POST'
         })

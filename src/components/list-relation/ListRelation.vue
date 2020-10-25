@@ -27,23 +27,22 @@
       </template>
     </b-table>
     <div class="d-flex justify-content-center">
-    <b-button-toolbar
-      class="col-md-2"
-      key-nav
-      v-if="search"
-      aria-label="Toolbar with button groups"
-    >
-      <b-button-group class="mx-1">
-      <b-button>&lsaquo;</b-button>
-      </b-button-group>
-      <b-button-group class="mx-1">
-        <b-button variant="dark"  v-on:click="backToFindMentor"
-          >Back</b-button>
-      </b-button-group>
-      <b-button-group class="mx-1">
-        <b-button>&rsaquo;</b-button>
-      </b-button-group>
-    </b-button-toolbar>
+      <b-button-toolbar
+        class="col-md-2"
+        key-nav
+        v-if="search"
+        aria-label="Toolbar with button groups"
+      >
+        <b-button-group class="mx-1">
+          <b-button>&lsaquo;</b-button>
+        </b-button-group>
+        <b-button-group class="mx-1">
+          <b-button variant="dark" v-on:click="backToFindMentor">Back</b-button>
+        </b-button-group>
+        <b-button-group class="mx-1">
+          <b-button>&rsaquo;</b-button>
+        </b-button-group>
+      </b-button-toolbar>
     </div>
   </div>
 </template>
@@ -52,7 +51,7 @@ import axios from 'axios'
 import personexpertises from '../../state/person-expertises'
 import listrelation from '../../state/list-relation'
 import expertises from '../../state/expertises'
-import URL_CONSTANT from '../../URL_CONSTANT'
+import UrlConstant from '../../UrlConstant'
 
 export default {
   name: 'ListMentorMentor',
@@ -62,6 +61,7 @@ export default {
         'mentorLeaderName',
         'subjects',
         'menteeCount',
+        'startDate',
         'phase',
         'show_details'
       ],
@@ -86,6 +86,7 @@ export default {
           method: this.method
         }).then((resp) => {
           resp.data.listRelation.forEach((relation) => {
+            this.item = {}
             relation.expertiseAreas.forEach((expertise) => {
               this.item.expertiseAreas = []
               this.item.expertiseAreas.push(expertise)
@@ -100,6 +101,11 @@ export default {
             this.item.otherMentors = relation.otherMentors
             this.item.otherMentees = relation.otherMentees
             this.item.mentorLeaderName = relation.mentorName
+            if (relation.startDate) {
+              this.item.startDate = relation.startDate
+            } else {
+              this.item.startDate = '-'
+            }
             if (relation.otherMentees !== null) {
               this.item.menteeCount = relation.otherMentees.length
             } else this.item.menteeCount = 0
@@ -107,7 +113,12 @@ export default {
             if (
               !(
                 listrelation.state === 'search' &&
-                localStorage.getItem('userName') === this.item.mentorLeaderName
+                (localStorage.getItem('userName') ===
+                  this.item.mentorLeaderName || relation.otherMentees
+                  ? relation.otherMentees.includes(
+                    localStorage.getItem('userName')
+                  )
+                  : false)
               )
             ) {
               this.items.push(this.item)
@@ -145,8 +156,7 @@ export default {
   beforeMount () {
     if (listrelation.state === 'search') {
       this.url =
-        URL_CONSTANT.SEARCH_EXPERTISE +
-        localStorage.getItem('authToken')
+        UrlConstant.SEARCH_EXPERTISE + localStorage.getItem('authToken')
       this.method = 'POST'
       this.request.expertiseNames = []
       expertises.state.forEach((expertise) => {
@@ -154,7 +164,7 @@ export default {
       })
     } else {
       this.url =
-        URL_CONSTANT.GET_EXPERTISE +
+        UrlConstant.GET_EXPERTISE +
         localStorage.getItem('authToken') +
         '/' +
         localStorage.getItem('id')

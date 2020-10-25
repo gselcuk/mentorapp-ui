@@ -2,7 +2,7 @@
   <div>
     <v-navbar></v-navbar>
     <v-list-mentor-user v-if="isUser"></v-list-mentor-user>
-    <v-list-mentor-mentor v-if="isMentor"></v-list-mentor-mentor>
+    <v-list-mentor-mentor v-if="!isUser"></v-list-mentor-mentor>
   </div>
 </template>
 <script>
@@ -11,13 +11,7 @@ export default {
     return {
       userName: localStorage.getItem('userName'),
       isAdmin: localStorage.getItem('isAdmin') === true,
-      isUser: localStorage.getItem('userRole') === 'USER',
-      isMentor:
-        localStorage.getItem('userRole') === 'MENTOR_GROUP_LEADER' ||
-        localStorage.getItem('userRole') === 'MENTOR_NORMAL',
-      isMentee:
-        localStorage.getItem('userRole') === 'MENTEE_GROUP_LEADER' ||
-        localStorage.getItem('userRole') === 'MENTEE_NORMAL'
+      isUser: localStorage.getItem('userRole') === 'USER'
     }
   }
 }

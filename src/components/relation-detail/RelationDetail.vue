@@ -4,8 +4,13 @@
     <b-jumbotron>
       <div class="container">
         <h1>Subjects of this relation : {{ this.subjects }}</h1>
+        <h3>Start Date: {{ this.startDate }}</h3>
         <b-card-group deck>
-          <b-card no-body class="overflow-hidden border-0" style="max-width: 540px">
+          <b-card
+            no-body
+            class="overflow-hidden border-0"
+            style="max-width: 540px"
+          >
             <b-row no-gutters>
               <b-col md="6">
                 <b-card-img
@@ -25,7 +30,11 @@
             </b-row>
           </b-card>
 
-          <b-card no-body class="overflow-hidden border-0" style="max-width: 540px">
+          <b-card
+            no-body
+            class="overflow-hidden border-0"
+            style="max-width: 540px"
+          >
             <b-row no-gutters>
               <b-col md="6">
                 <b-card-body title="Mentee">
@@ -42,7 +51,6 @@
                 ></b-card-img>
               </b-col>
             </b-row>
-            <b-button variant="primary" @click="joinMentee" v-if = "!isCreator">Join</b-button>
           </b-card>
         </b-card-group>
         <b-form-group class="mt-4" label="Relation Phase:">
@@ -59,7 +67,9 @@
             >
           </b-form-radio-group>
         </b-form-group>
-        <b-button variant="primary" @click="backToList" v-if = "isCreator">Save</b-button>
+        <b-button variant="primary" @click="joinMentee" v-if="isJoinEnable"
+          >Join</b-button
+        >
         <b-button variant="secondary" @click="backToList"
           >Back to List</b-button
         >
@@ -70,7 +80,7 @@
 <script>
 import expertises from '../../state/person-expertises'
 import axios from 'axios'
-import URL_CONSTANT from '../../URL_CONSTANT'
+import UrlConstant from '../../UrlConstant'
 
 export default {
   name: 'RelationDetail',
@@ -87,22 +97,43 @@ export default {
       expertises: expertises.state,
       creatorName: expertises.state.mentorLeaderName,
       subjects: expertises.state.subjects,
-      isCreator: expertises.state.mentorLeaderName === localStorage.getItem('userName'),
       request: {},
-      groupExpertiseRelation: {}
+      groupExpertiseRelation: {},
+      startDate: expertises.state.startDate,
+      isJoinEnable: expertises.state.otherMentees
+        ? !expertises.state.otherMentees.includes(
+          localStorage.getItem('userName')
+        )
+        : true ||
+          !expertises.state.mentorLeaderName ===
+            localStorage.getItem('userName')
     }
   },
   computed: {
     otherMentors: function () {
+      var result = ''
       if (expertises.state.otherMentors) {
-        return expertises.state.otherMentors
-      } else {
-        return 'There is no other mentors.'
+        expertises.state.otherMentors.forEach((element) => {
+          if (result === '') {
+            result = element
+          } else {
+            element = element + ',' + result
+          }
+        })
+        return result
       }
     },
     otherMentees: function () {
+      var result = ''
       if (expertises.state.otherMentees) {
-        return expertises.state.otherMentees
+        expertises.state.otherMentees.forEach((element) => {
+          if (result === '') {
+            result = element
+          } else {
+            element = element + ',' + result
+          }
+        })
+        return result
       } else {
         return 'There is no other mentees.'
       }
@@ -118,14 +149,15 @@ export default {
       this.request.userId = localStorage.getItem('id')
       this.request.groupName = 'MENTEE'
       this.request.authToken = localStorage.getItem('authToken')
+      if (localStorage.getItem('userRole') === 'UESR') {
+        localStorage.setItem('MENTEE')
+      }
       return new Promise((resolve, reject) => {
         axios({
-          url: URL_CONSTANT.JOIN_RELATION,
+          url: UrlConstant.JOIN_RELATION,
           data: this.request,
           method: 'POST'
-        }).then((resp) => {
-
-        })
+        }).then((resp) => {})
       })
     }
   },
