@@ -19,7 +19,6 @@ export default {
   color: #2c3e50;
 }
 .jumbotron {
-  height: 94vh;
   background-color:white;
   width: 100%;
   color: black;

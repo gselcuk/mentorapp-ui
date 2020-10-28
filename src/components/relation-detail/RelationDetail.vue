@@ -4,7 +4,7 @@
     <b-jumbotron>
       <div class="container">
         <h1>Subjects of this relation : {{ this.subjects }}</h1>
-        <h3>Start Date: {{ this.startDate }}</h3>
+        <h3 class="mt-4">Start Date: {{ this.startDate }}</h3>
         <b-card-group deck>
           <b-card
             no-body
@@ -16,7 +16,7 @@
                 <b-card-img
                   src="../../assets/default-mentor.png"
                   alt="Image"
-                  class="rounded-0"
+                  class="d-none d-lg-block rounded-0"
                 ></b-card-img>
               </b-col>
               <b-col md="6">
@@ -47,12 +47,65 @@
                 <b-card-img
                   src="../../assets/default-mentee.png"
                   alt="Image"
-                  class="rounded-0"
+                  class="d-none d-lg-block rounded-0"
                 ></b-card-img>
               </b-col>
             </b-row>
           </b-card>
         </b-card-group>
+        <b-container class="bv-example-row mt-4">
+          <b-row>
+            <b-col>
+              <b-card-group deck>
+                <b-card header="Expertise Description">
+                  <b-list-group>
+                    <b-list-group-item v-for="i in items" :key="i.expertiseName"
+                      >{{ i.expertiseName }} :
+                      {{ i.expertiseDescription }}</b-list-group-item
+                    >
+                  </b-list-group>
+                </b-card>
+              </b-card-group>
+            </b-col>
+            <b-col v-if ="isStarted">
+              <b-card-group deck>
+                <b-card header="Choose a date">
+                  <label for="example-datepicker">Next session subjects</label>
+                  <b-form-input
+                    v-model="sessionSubject"
+                    placeholder="Subject Description"
+                  ></b-form-input>
+
+                  <b-form-datepicker
+                    id="example-datepicker"
+                    v-model="sessionDate"
+                    class="mb-2 mt-4"
+                    :disabled="!isMentor"
+                  ></b-form-datepicker>
+                  <b-button variant="primary" @click="setNextSession" v-if = "isMentor"
+                    >Set next session</b-button
+                  >
+                  <b-button variant="primary" @click="setCompleted"  v-if = "isMentor"
+                    >Completed</b-button
+                  >
+                </b-card>
+              </b-card-group>
+            </b-col>
+            <b-col  v-if ="isSessionHistoryExist">
+              <b-card-group deck>
+                <b-card header="Session History">
+                  <b-list-group>
+                    <b-list-group-item v-for="session in sessionHistories" :key="session.expertiseName"
+                      >{{ session.sessionDescription }} :
+                      {{ session.sessionDate  }}</b-list-group-item
+                    >
+                  </b-list-group>
+                </b-card>
+              </b-card-group>
+            </b-col>
+          </b-row>
+        </b-container>
+
         <b-form-group class="mt-4" label="Relation Phase:">
           <b-form-radio-group v-model="selected" name="radios-btn-default">
             <b-form-radio value="Not Started" size="lg" disabled
@@ -100,13 +153,20 @@ export default {
       request: {},
       groupExpertiseRelation: {},
       startDate: expertises.state.startDate,
-      isJoinEnable: expertises.state.otherMentees
+      isJoinEnable: expertises.state.otherMentees !== null
         ? !expertises.state.otherMentees.includes(
           localStorage.getItem('userName')
-        )
-        : true ||
-          !expertises.state.mentorLeaderName ===
-            localStorage.getItem('userName')
+        ) && expertises.state.mentorLeaderName !==
+          localStorage.getItem('userName')
+        : expertises.state.mentorLeaderName !==
+          localStorage.getItem('userName'),
+      item: {},
+      items: [],
+      isStarted: expertises.state.menteeCount !== 0,
+      isMentor: localStorage.getItem('userRole') === 'MENTOR_GROUP_LEADER',
+      sessionHistories: [],
+      currentSessionHistory: {},
+      isSessionHistoryExist: false
     }
   },
   computed: {
@@ -162,7 +222,12 @@ export default {
     }
   },
   beforeMount () {
-    console.log(expertises.state.phase)
+    expertises.state.expertiseAreas.forEach((element) => {
+      this.item = {}
+      this.item.expertiseName = element.expertiseName
+      this.item.expertiseDescription = element.expertiseDescription
+      this.items.push(this.item)
+    })
   }
 }
 </script>

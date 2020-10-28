@@ -87,8 +87,8 @@ export default {
         }).then((resp) => {
           resp.data.listRelation.forEach((relation) => {
             this.item = {}
+            this.item.expertiseAreas = []
             relation.expertiseAreas.forEach((expertise) => {
-              this.item.expertiseAreas = []
               this.item.expertiseAreas.push(expertise)
               if (!this.item.subjects) {
                 this.item.subjects = expertise.expertiseName

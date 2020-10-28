@@ -113,6 +113,15 @@
         >
           Your Expertises Empty ! Please Choose at Least 1 Expertise.
         </b-alert>
+            <b-alert
+          v-model="fullExpertises"
+          variant="danger"
+          dismissible
+          fade
+          class="mt-4"
+        >
+          You cannot choose more than 3 expertises.
+        </b-alert>
       </div>
     </div>
   </div>
@@ -133,6 +142,7 @@ export default {
   data () {
     return {
       emptyExpertiseList: false,
+      fullExpertises: false,
       yourExpertises: [],
       keywords: [],
       isMentor: usertype.state === 'MENTOR',
@@ -213,6 +223,8 @@ export default {
       )
       if (this.yourExpertises.length < 1) {
         this.emptyExpertiseList = true
+      } else if (this.yourExpertises.length > 3) {
+        this.fullExpertises = true
       } else {
         expertises.state = this.yourExpertises
 
