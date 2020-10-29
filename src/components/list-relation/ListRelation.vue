@@ -113,12 +113,12 @@ export default {
             if (
               !(
                 listrelation.state === 'search' &&
-                (localStorage.getItem('userName') ===
-                  this.item.mentorLeaderName || relation.otherMentees
+                ((localStorage.getItem('userName') ===
+                  this.item.mentorLeaderName) || (relation.otherMentees
                   ? relation.otherMentees.includes(
                     localStorage.getItem('userName')
                   )
-                  : false)
+                  : false))
               )
             ) {
               this.items.push(this.item)
