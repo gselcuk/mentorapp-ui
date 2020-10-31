@@ -18,11 +18,13 @@
     "axios": "^0.20.0",
     "bootstrap": "^4.5.2",
     "bootstrap-vue": "^2.17.3",
+    "moment": "^2.29.1",
     "portal-vue": "^2.1.7",
     "vee-validate": "^3.4.0",
     "vue": "^2.6.12",
     "vue-draggable": "^2.0.6",
     "vue-material": "^1.0.0-beta-15",
+    "vue-moment": "^4.1.0",
     "vue-router": "^3.0.1",
     "vuedraggable": "^2.24.1",
     "vuex": "^3.5.1"

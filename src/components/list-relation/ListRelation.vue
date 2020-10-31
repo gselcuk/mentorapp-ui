@@ -88,15 +88,18 @@ export default {
           resp.data.listRelation.forEach((relation) => {
             this.item = {}
             this.item.expertiseAreas = []
-            relation.expertiseAreas.forEach((expertise) => {
-              this.item.expertiseAreas.push(expertise)
-              if (!this.item.subjects) {
-                this.item.subjects = expertise.expertiseName
-              } else {
-                this.item.subjects =
+            if (relation.expertiseAreas) {
+              relation.expertiseAreas.forEach((expertise) => {
+                this.item.expertiseAreas.push(expertise)
+                if (!this.item.subjects) {
+                  this.item.subjects = expertise.expertiseName
+                } else {
+                  this.item.subjects =
                   this.item.subjects + ',' + expertise.expertiseName
-              }
-            })
+                }
+              })
+            }
+
             this.item.mentorGroupId = relation.mentorGroupId
             this.item.otherMentors = relation.otherMentors
             this.item.otherMentees = relation.otherMentees
@@ -110,6 +113,7 @@ export default {
               this.item.menteeCount = relation.otherMentees.length
             } else this.item.menteeCount = 0
             this.item.phase = this.findLabel(relation.relationPhase)
+
             if (
               !(
                 listrelation.state === 'search' &&
@@ -129,6 +133,7 @@ export default {
       })
         .catch((err) => {
           console.log(err)
+          this.isBusy = false
         })
         .finally(() => {
           this.isBusy = false

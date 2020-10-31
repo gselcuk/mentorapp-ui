@@ -10,6 +10,7 @@ import ListMentorUser from './components/list-mentor/ListMentorUser'
 import ListMentorMentor from './components/list-mentor/ListMentorMentor'
 import ChooseExpertise from './components/expertise/ChooseExpertise'
 import ListRelation from './components/list-relation/ListRelation'
+import moment from 'moment'
 
 Vue.prototype.$http = Axios
 
@@ -23,6 +24,7 @@ Vue.component('v-list-relation', ListRelation)
 const token = localStorage.getItem('token')
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token
+  Vue.prototype.moment = moment
 }
 /* eslint-disable no-new */
 new Vue({

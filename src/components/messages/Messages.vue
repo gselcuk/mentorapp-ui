@@ -1,6 +1,8 @@
 <template>
-  <div><v-navbar></v-navbar>
-  <div>Messages</div>
+  <div>
+    <v-navbar></v-navbar>
+      Messages
+
   </div>
 </template>
 <script>

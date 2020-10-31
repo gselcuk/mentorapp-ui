@@ -67,37 +67,56 @@
                 </b-card>
               </b-card-group>
             </b-col>
-            <b-col v-if ="isStarted">
+            <b-col v-if="isStarted">
               <b-card-group deck>
                 <b-card header="Choose a date">
                   <label for="example-datepicker">Next session subjects</label>
                   <b-form-input
-                    v-model="sessionSubject"
+                    v-model="sessionDescription"
                     placeholder="Subject Description"
                   ></b-form-input>
-
+                  <b-alert
+                    v-model="isDescriptionNotValid"
+                    variant="danger"
+                    dismissible
+                    fade
+                    class="mt-4"
+                  >
+                    Descrition required
+                  </b-alert>
                   <b-form-datepicker
                     id="example-datepicker"
                     v-model="sessionDate"
                     class="mb-2 mt-4"
                     :disabled="!isMentor"
                   ></b-form-datepicker>
-                  <b-button variant="primary" @click="setNextSession" v-if = "isMentor"
-                    >Set next session</b-button
+                  <b-alert
+                    v-model="isDateNotValid"
+                    variant="danger"
+                    dismissible
+                    fade
+                    class="mt-4"
                   >
-                  <b-button variant="primary" @click="setCompleted"  v-if = "isMentor"
-                    >Completed</b-button
+                    Date is required
+                  </b-alert>
+                  <b-button
+                    variant="primary"
+                    @click="setNextSession"
+                    v-if="isMentor"
+                    >Set next session</b-button
                   >
                 </b-card>
               </b-card-group>
             </b-col>
-            <b-col  v-if ="isSessionHistoryExist">
+            <b-col v-if="isSessionHistoryExist">
               <b-card-group deck>
                 <b-card header="Session History">
                   <b-list-group>
-                    <b-list-group-item v-for="session in sessionHistories" :key="session.expertiseName"
+                    <b-list-group-item
+                      v-for="session in sessionHistories"
+                      :key="session.expertiseName"
                       >{{ session.sessionDescription }} :
-                      {{ session.sessionDate  }}</b-list-group-item
+                      {{ session.sessionDate }}</b-list-group-item
                     >
                   </b-list-group>
                 </b-card>
@@ -134,6 +153,7 @@
 import expertises from '../../state/person-expertises'
 import axios from 'axios'
 import UrlConstant from '../../UrlConstant'
+import moment from 'vue-moment'
 
 export default {
   name: 'RelationDetail',
@@ -153,20 +173,27 @@ export default {
       request: {},
       groupExpertiseRelation: {},
       startDate: expertises.state.startDate,
-      isJoinEnable: expertises.state.otherMentees !== null
-        ? !expertises.state.otherMentees.includes(
-          localStorage.getItem('userName')
-        ) && expertises.state.mentorLeaderName !==
-          localStorage.getItem('userName')
-        : expertises.state.mentorLeaderName !==
-          localStorage.getItem('userName'),
+      isJoinEnable:
+        expertises.state.otherMentees !== null
+          ? !expertises.state.otherMentees.includes(
+            localStorage.getItem('userName')
+          ) &&
+            expertises.state.mentorLeaderName !==
+              localStorage.getItem('userName')
+          : expertises.state.mentorLeaderName !==
+            localStorage.getItem('userName'),
       item: {},
       items: [],
       isStarted: expertises.state.menteeCount !== 0,
-      isMentor: localStorage.getItem('userRole') === 'MENTOR_GROUP_LEADER',
+      isMentor: localStorage.getItem('id') === expertises.state.mentorGroupId,
       sessionHistories: [],
       currentSessionHistory: {},
-      isSessionHistoryExist: false
+      isSessionHistoryExist: false,
+      otherMentees: this.findOtherMentees(),
+      sessionDescription: 'stestestes',
+      sessionDate: '',
+      isDescriptionNotValid: false,
+      isDateNotValid: false
     }
   },
   computed: {
@@ -177,29 +204,49 @@ export default {
           if (result === '') {
             result = element
           } else {
-            element = element + ',' + result
+            result = result + ',' + element
           }
         })
         return result
       }
+    }
+  },
+  methods: {
+    setNextSession () {
+      if (!this.sessionDescription) { this.isDescriptionNotValid = true }
+      if (!this.sessionDate) { this.isDateNotValid = true }
+      this.request = {}
+      this.request.mentorGroupId = localStorage.getItem('id')
+      this.request.sessionDescription = this.sessionDescription
+      this.request.sessionDate = this.sessionDate
+
+      return new Promise((resolve, reject) => {
+        axios({
+          url: UrlConstant.SET_NEXT_SESSION,
+          data: this.request,
+          method: 'POST'
+        }).then((resp) => {
+          resp.data.sessionHistory.forEach(element => {
+            this.sessionHistories.push(element)
+          })
+        })
+      })
     },
-    otherMentees: function () {
+    findOtherMentees () {
       var result = ''
       if (expertises.state.otherMentees) {
         expertises.state.otherMentees.forEach((element) => {
           if (result === '') {
             result = element
           } else {
-            element = element + ',' + result
+            result = result + ',' + element
           }
         })
         return result
       } else {
         return 'There is no other mentees.'
       }
-    }
-  },
-  methods: {
+    },
     backToList () {
       this.$router.push('/list-mentor')
     },
@@ -209,9 +256,18 @@ export default {
       this.request.userId = localStorage.getItem('id')
       this.request.groupName = 'MENTEE'
       this.request.authToken = localStorage.getItem('authToken')
-      if (localStorage.getItem('userRole') === 'UESR') {
-        localStorage.setItem('MENTEE')
+      if (localStorage.getItem('userRole') === 'USER') {
+        localStorage.setItem('userRole', 'MENTEE')
       }
+      this.otherMentees =
+        this.otherMentees === 'There is no other mentees.'
+          ? localStorage.getItem('userName')
+          : this.otherMentees + ',' + localStorage.getItem('userName')
+      this.startDate =
+        this.startDate === '-'
+          ? moment(new Date()).format('YYYY-MM-DD')
+          : this.startDate
+      this.isJoinEnable = false
       return new Promise((resolve, reject) => {
         axios({
           url: UrlConstant.JOIN_RELATION,
@@ -227,6 +283,20 @@ export default {
       this.item.expertiseName = element.expertiseName
       this.item.expertiseDescription = element.expertiseDescription
       this.items.push(this.item)
+      return new Promise((resolve, reject) => {
+        axios({
+          url: UrlConstant.GET_SESSION_INFO + localStorage.getItem('id'),
+          method: 'GET'
+        }).then((resp) => {
+          this.sessionDate = resp.data.sessionDate
+          this.sessionDescription = resp.data.sessionDescription
+          if (resp.data.sessionHistory) {
+            resp.data.sessionHistory.forEach(element => {
+              this.sessionHistories.push(element)
+            })
+          }
+        })
+      })
     })
   }
 }

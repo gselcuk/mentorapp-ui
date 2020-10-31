@@ -102,7 +102,7 @@
           size="lg"
           variant="dark"
           v-on:click="saveExpertise"
-          >{{nextLabel}}</b-button
+          >{{ nextLabel }}</b-button
         >
         <b-alert
           v-model="emptyExpertiseList"
@@ -113,7 +113,7 @@
         >
           Your Expertises Empty ! Please Choose at Least 1 Expertise.
         </b-alert>
-            <b-alert
+        <b-alert
           v-model="fullExpertises"
           variant="danger"
           dismissible
