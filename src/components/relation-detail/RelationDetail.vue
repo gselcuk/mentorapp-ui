@@ -85,8 +85,10 @@
                     Descrition required
                   </b-alert>
                   <b-form-datepicker
-                    id="example-datepicker"
+                     id="datepicker-sm"
+                    size="sm"
                     v-model="sessionDate"
+                    locale="en-US"
                     class="mb-2 mt-4"
                     :disabled="!isMentor"
                   ></b-form-datepicker>
@@ -114,10 +116,12 @@
                   <b-list-group>
                     <b-list-group-item
                       v-for="session in sessionHistories"
-                      :key="session.expertiseName"
-                      >{{ session.sessionDescription }} :
-                      {{ session.sessionDate }}</b-list-group-item
+                      :key="session.sessionDescription"
                     >
+                      <h6>Date : {{ session.sessionDate }}</h6>
+                      <h6>Description : {{ session.sessionDescription }}</h6>
+                      <span class="border-bottom"></span>
+                    </b-list-group-item>
                   </b-list-group>
                 </b-card>
               </b-card-group>
@@ -153,7 +157,6 @@
 import expertises from '../../state/person-expertises'
 import axios from 'axios'
 import UrlConstant from '../../UrlConstant'
-import moment from 'vue-moment'
 
 export default {
   name: 'RelationDetail',
@@ -213,8 +216,12 @@ export default {
   },
   methods: {
     setNextSession () {
-      if (!this.sessionDescription) { this.isDescriptionNotValid = true }
-      if (!this.sessionDate) { this.isDateNotValid = true }
+      if (!this.sessionDescription) {
+        this.isDescriptionNotValid = true
+      }
+      if (!this.sessionDate) {
+        this.isDateNotValid = true
+      }
       this.request = {}
       this.request.mentorGroupId = localStorage.getItem('id')
       this.request.sessionDescription = this.sessionDescription
@@ -226,9 +233,13 @@ export default {
           data: this.request,
           method: 'POST'
         }).then((resp) => {
-          resp.data.sessionHistory.forEach(element => {
-            this.sessionHistories.push(element)
-          })
+          if (resp.data.sessionHistory) {
+            this.sessionHistories = []
+            resp.data.sessionHistory.forEach((element) => {
+              this.isSessionHistoryExist = true
+              this.sessionHistories.push(element)
+            })
+          }
         })
       })
     },
@@ -263,17 +274,15 @@ export default {
         this.otherMentees === 'There is no other mentees.'
           ? localStorage.getItem('userName')
           : this.otherMentees + ',' + localStorage.getItem('userName')
-      this.startDate =
-        this.startDate === '-'
-          ? moment(new Date()).format('YYYY-MM-DD')
-          : this.startDate
       this.isJoinEnable = false
       return new Promise((resolve, reject) => {
         axios({
           url: UrlConstant.JOIN_RELATION,
           data: this.request,
           method: 'POST'
-        }).then((resp) => {})
+        }).then((resp) => {
+          this.startDate = resp.data.startDate
+        })
       })
     }
   },
@@ -283,15 +292,18 @@ export default {
       this.item.expertiseName = element.expertiseName
       this.item.expertiseDescription = element.expertiseDescription
       this.items.push(this.item)
+      this.sessionHistories = []
       return new Promise((resolve, reject) => {
         axios({
-          url: UrlConstant.GET_SESSION_INFO + localStorage.getItem('id'),
+          url: UrlConstant.GET_SESSION_INFO + expertises.state.mentorGroupId,
           method: 'GET'
         }).then((resp) => {
-          this.sessionDate = resp.data.sessionDate
-          this.sessionDescription = resp.data.sessionDescription
+          console.log(resp.data.currentSession.sessionDescription)
+          this.sessionDate = resp.data.currentSession.sessionDate
+          this.sessionDescription = resp.data.currentSession.sessionDescription
           if (resp.data.sessionHistory) {
-            resp.data.sessionHistory.forEach(element => {
+            this.isSessionHistoryExist = true
+            resp.data.sessionHistory.forEach((element) => {
               this.sessionHistories.push(element)
             })
           }

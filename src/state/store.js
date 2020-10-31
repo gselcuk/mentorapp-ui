@@ -45,8 +45,7 @@ export default new Vuex.Store({
             const id = resp.data.id
             const userRole = resp.data.userRole
             const userName = resp.data.userName
-            const isAdmin = resp.data.isAdmin
-
+            const isAdmin = resp.data.admin
             localStorage.setItem('id', id)
             localStorage.setItem('userRole', userRole)
             localStorage.setItem('userName', userName)

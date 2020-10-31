@@ -71,12 +71,12 @@ export default {
       url: '',
       method: 'GET',
       request: {},
-      search: listrelation.state === 'search'
+      search: listrelation.state === 'search' || localStorage.getItem('isAdmin') === 'true'
     }
   },
   methods: {
     backToFindMentor () {
-      this.$router.push('/find-mentor')
+      if (localStorage.getItem('isAdmin') === 'false') { this.$router.push('/find-mentor') }
     },
     fillData () {
       return new Promise((resolve, reject) => {
@@ -85,59 +85,58 @@ export default {
           data: this.request,
           method: this.method
         }).then((resp) => {
-          resp.data.listRelation.forEach((relation) => {
-            this.item = {}
-            this.item.expertiseAreas = []
-            if (relation.expertiseAreas) {
-              relation.expertiseAreas.forEach((expertise) => {
-                this.item.expertiseAreas.push(expertise)
-                if (!this.item.subjects) {
-                  this.item.subjects = expertise.expertiseName
-                } else {
-                  this.item.subjects =
-                  this.item.subjects + ',' + expertise.expertiseName
-                }
-              })
-            }
+          if (resp.data.listRelation) {
+            resp.data.listRelation.forEach((relation) => {
+              this.item = {}
+              this.item.expertiseAreas = []
+              if (relation.expertiseAreas) {
+                relation.expertiseAreas.forEach((expertise) => {
+                  this.item.expertiseAreas.push(expertise)
+                  if (!this.item.subjects) {
+                    this.item.subjects = expertise.expertiseName
+                  } else {
+                    this.item.subjects =
+                      this.item.subjects + ',' + expertise.expertiseName
+                  }
+                })
+              }
 
-            this.item.mentorGroupId = relation.mentorGroupId
-            this.item.otherMentors = relation.otherMentors
-            this.item.otherMentees = relation.otherMentees
-            this.item.mentorLeaderName = relation.mentorName
-            if (relation.startDate) {
-              this.item.startDate = relation.startDate
-            } else {
-              this.item.startDate = '-'
-            }
-            if (relation.otherMentees !== null) {
-              this.item.menteeCount = relation.otherMentees.length
-            } else this.item.menteeCount = 0
-            this.item.phase = this.findLabel(relation.relationPhase)
+              this.item.mentorGroupId = relation.mentorGroupId
+              this.item.otherMentors = relation.otherMentors
+              this.item.otherMentees = relation.otherMentees
+              this.item.mentorLeaderName = relation.mentorName
+              if (relation.startDate) {
+                this.item.startDate = relation.startDate
+              } else {
+                this.item.startDate = '-'
+              }
+              if (relation.otherMentees !== null) {
+                this.item.menteeCount = relation.otherMentees.length
+              } else this.item.menteeCount = 0
+              this.item.phase = this.findLabel(relation.relationPhase)
 
-            if (
-              !(
-                listrelation.state === 'search' &&
-                ((localStorage.getItem('userName') ===
-                  this.item.mentorLeaderName) || (relation.otherMentees
-                  ? relation.otherMentees.includes(
-                    localStorage.getItem('userName')
-                  )
-                  : false))
-              )
-            ) {
-              this.items.push(this.item)
-            }
+              if (
+                !(
+                  listrelation.state === 'search' &&
+                  (localStorage.getItem('userName') ===
+                    this.item.mentorLeaderName ||
+                    (relation.otherMentees
+                      ? relation.otherMentees.includes(
+                        localStorage.getItem('userName')
+                      )
+                      : false))
+                )
+              ) {
+                this.items.push(this.item)
+              }
+            })
             this.isBusy = false
-          })
+          }
         })
+      }).catch((err) => {
+        console.log(err)
+        this.isBusy = false
       })
-        .catch((err) => {
-          console.log(err)
-          this.isBusy = false
-        })
-        .finally(() => {
-          this.isBusy = false
-        })
     },
     findLabel (key) {
       if (key === 'NOT_STARTED') {
@@ -159,14 +158,17 @@ export default {
     }
   },
   beforeMount () {
-    if (listrelation.state === 'search') {
+    if (listrelation.state === 'search' || localStorage.getItem('isAdmin') === 'true') {
       this.url =
         UrlConstant.SEARCH_EXPERTISE + localStorage.getItem('authToken')
       this.method = 'POST'
       this.request.expertiseNames = []
-      expertises.state.forEach((expertise) => {
-        this.request.expertiseNames.push(expertise.name)
-      })
+      this.request.admin = localStorage.getItem('isAdmin')
+      if (expertises.state) {
+        expertises.state.forEach((expertise) => {
+          this.request.expertiseNames.push(expertise.name)
+        })
+      }
     } else {
       this.url =
         UrlConstant.GET_EXPERTISE +
