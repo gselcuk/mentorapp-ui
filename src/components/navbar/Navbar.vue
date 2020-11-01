@@ -16,7 +16,6 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav">
           <a href="#/profile" class="nav-item nav-link">Profile</a>
-          <a href="#/messages" class="nav-item nav-link">Messages</a>
           <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle"
@@ -76,6 +75,7 @@
 <script>
 import usertype from '../../state/usertype'
 import listrelation from '../../state/list-relation'
+import expertises from '../../state/expertises'
 
 export default {
   name: 'ListMentor',
@@ -97,6 +97,7 @@ export default {
       usertype.state = state
     },
     setStateList () {
+      if (localStorage.getItem('isAdmin') === 'true') { expertises.state = [] }
       listrelation.state = 'user'
     }
   }

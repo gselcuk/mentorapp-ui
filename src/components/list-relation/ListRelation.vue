@@ -34,13 +34,13 @@
         aria-label="Toolbar with button groups"
       >
         <b-button-group class="mx-1">
-          <b-button>&lsaquo;</b-button>
+          <b-button @click="previos()">&lsaquo;</b-button>
         </b-button-group>
         <b-button-group class="mx-1">
           <b-button variant="dark" v-on:click="backToFindMentor">Back</b-button>
         </b-button-group>
         <b-button-group class="mx-1">
-          <b-button>&rsaquo;</b-button>
+          <b-button @click="next()">&rsaquo;</b-button>
         </b-button-group>
       </b-button-toolbar>
     </div>
@@ -71,21 +71,53 @@ export default {
       url: '',
       method: 'GET',
       request: {},
-      search: listrelation.state === 'search' || localStorage.getItem('isAdmin') === 'true'
+      search:
+        listrelation.state === 'search' ||
+        localStorage.getItem('isAdmin') === 'true',
+      page: 0,
+      size: 10,
+      params: {}
     }
   },
   methods: {
+    previos () {
+      console.log(this.page)
+      if (this.page > 0) {
+        this.page = this.page - 1
+        this.params.page = this.page
+        this.params.size = 10
+        this.fillData()
+      }
+    },
+    next () {
+      console.log(this.size)
+      if (this.size === 10) {
+        this.page = this.page + 1
+        this.params.page = this.page
+        this.params.size = 10
+        this.fillData()
+      }
+    },
     backToFindMentor () {
-      if (localStorage.getItem('isAdmin') === 'false') { this.$router.push('/find-mentor') }
+      if (
+        localStorage.getItem('isAdmin') === 'false' ||
+        listrelation.state === 'search'
+      ) {
+        this.$router.push('/find-mentor')
+      }
     },
     fillData () {
+      this.items = []
       return new Promise((resolve, reject) => {
         axios({
           url: this.url,
           data: this.request,
-          method: this.method
+          method: this.method,
+          params: this.params
         }).then((resp) => {
           if (resp.data.listRelation) {
+            this.size = resp.data.listRelation.length
+            console.log(this.size)
             resp.data.listRelation.forEach((relation) => {
               this.item = {}
               this.item.expertiseAreas = []
@@ -158,7 +190,10 @@ export default {
     }
   },
   beforeMount () {
-    if (listrelation.state === 'search' || localStorage.getItem('isAdmin') === 'true') {
+    if (
+      listrelation.state === 'search' ||
+      localStorage.getItem('isAdmin') === 'true'
+    ) {
       this.url =
         UrlConstant.SEARCH_EXPERTISE + localStorage.getItem('authToken')
       this.method = 'POST'

@@ -10,7 +10,6 @@ import BeMentor from '@/components/be-mentor/BeMentor'
 import FinalizeBeMentor from '@/components/be-mentor/FinalizeBeMentor'
 import RelationDetail from '@/components/relation-detail/RelationDetail'
 import Profile from '@/components/profile/Profile'
-import Messages from '@/components/messages/Messages'
 import FindMentor from '@/components/find-mentor/FindMentor'
 import JoinMentor from '@/components/be-mentor/JoinMentor'
 import FinalizeFindMentor from '@/components/find-mentor/FinalizeFindMentor'
@@ -72,14 +71,6 @@ let router = new Router({
       path: '/relation-detail',
       name: 'RelationDetail',
       component: RelationDetail,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/messages',
-      name: 'Messages',
-      component: Messages,
       meta: {
         requiresAuth: true
       }
