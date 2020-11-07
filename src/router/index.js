@@ -13,6 +13,7 @@ import Profile from '@/components/profile/Profile'
 import FindMentor from '@/components/find-mentor/FindMentor'
 import JoinMentor from '@/components/be-mentor/JoinMentor'
 import FinalizeFindMentor from '@/components/find-mentor/FinalizeFindMentor'
+import SetExpertise from '@/components/admin/SetExpertise'
 
 Vue.use(AlertPlugin)
 Vue.use(Router)
@@ -95,6 +96,14 @@ let router = new Router({
       path: '/finalize-find-mentor',
       name: 'FinalizeFindMentor',
       component: FinalizeFindMentor,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/set-expertise',
+      name: 'SetExpertise',
+      component: SetExpertise,
       meta: {
         requiresAuth: true
       }

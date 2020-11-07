@@ -54,6 +54,27 @@
               >
             </div>
           </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              v-if="isAdmin == 'true'"
+              aria-expanded="false"
+            >
+              Admin
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a
+                class="dropdown-item"
+                href="#/set-expertise"
+                >Set Expertises</a
+              >
+            </div>
+          </li>
         </div>
         <div class="navbar-nav ml-auto">
           <a class="nav-item nav-link d-none d-lg-block"
@@ -83,7 +104,8 @@ export default {
     return {
       msg: 'Login Success ' + localStorage.getItem('id'),
       userRole: localStorage.getItem('userRole'),
-      userName: localStorage.getItem('userName')
+      userName: localStorage.getItem('userName'),
+      isAdmin: localStorage.getItem('isAdmin')
     }
   },
   methods: {
@@ -97,7 +119,9 @@ export default {
       usertype.state = state
     },
     setStateList () {
-      if (localStorage.getItem('isAdmin') === 'true') { expertises.state = [] }
+      if (localStorage.getItem('isAdmin') === 'true') {
+        expertises.state = []
+      }
       listrelation.state = 'user'
     }
   }
