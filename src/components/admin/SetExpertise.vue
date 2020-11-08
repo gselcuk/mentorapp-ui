@@ -7,7 +7,7 @@
         <b-card-group deck>
           <b-card
             v-for="element in expertises"
-            :key="element.id"
+            :key="element.subject"
             :header="element.subject"
             :footer="element.subject"
           >
@@ -38,24 +38,66 @@
                 <label for="textarea-default">Expertise Subject:</label>
               </b-col>
               <b-col sm="10">
-                <b-form-textarea
-                  id="textarea-default"
-                  placeholder=" Description"
+                <b-form-input
+                  id="input-small"
+                  placeholder="Subject of Expertise"
                   v-model="expertise.subject"
-                ></b-form-textarea>
+                ></b-form-input>
               </b-col>
             </b-row>
             <div>
-              <label for="tags-pills">Expertises</label>
-              <b-form-tags
-                input-id="tags-pills"
-                tag-variant="primary"
-                tag-pills
-                size="lg"
-                separator=" "
-                placeholder="Expertise names"
-                v-model="expertise.expertiseNames"
-              ></b-form-tags>
+              <b-row class="mt-2">
+                <b-col sm="2">
+                  <label for="input-small">Expertise Name:</label>
+                </b-col>
+                <b-col sm="10">
+                  <div class="input-group mb-3">
+                    <b-form-input
+                      id="input-small"
+                      placeholder="Name of subject"
+                      v-model="expertiseName"
+                    ></b-form-input>
+                    <div class="input-group-append">
+                      <b-button
+                        variant="outline-success"
+                        id="enter"
+                        type="button"
+                        @click="addExpertiseToExpertises"
+                      >
+                        +
+                      </b-button>
+                    </div>
+                  </div>
+                </b-col>
+                <b-col sm="12">
+                  <b-alert
+                    v-model="isExpertiseNameNotValid"
+                    variant="danger"
+                    dismissible
+                    fade
+                  >
+                    Name of subject cannot be null
+                  </b-alert>
+                </b-col>
+                <b-col>
+                  <b-list-group
+                    v-for="element in expertiseNames"
+                    :key="element"
+                  >
+                    <b-list-group-item
+                      >{{ element }}
+                      <b-button
+                        variant="outline-danger"
+                        id="enter"
+                        type="button"
+                        @click="removeExpertiseFromExpertises(element)"
+                      >
+                        -
+                      </b-button>
+                    </b-list-group-item>
+                  </b-list-group>
+                </b-col>
+              </b-row>
             </div>
             <div class="mt-2">
               <b-alert
@@ -79,14 +121,20 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+import UrlConstant from '../../UrlConstant'
+
 export default {
   data () {
     return {
       expertises: [],
       expertise: {},
+      expertiseNames: [],
       isExpertise: true,
       isSaveExpertiseNotValid: false,
-      id: 1
+      expertiseName: '',
+      request: {},
+      isExpertiseNameNotValid: false
     }
   },
   methods: {
@@ -94,30 +142,80 @@ export default {
       this.isSaveExpertiseNotValid = false
       this.isExpertise = !this.isExpertise
     },
+    addExpertiseToExpertises () {
+      if (this.expertiseName) {
+        const index = this.expertiseNames.findIndex(
+          (obj) => obj === this.expertiseName
+        )
+        console.log(index)
+        if (index === -1) {
+          this.expertiseNames.push(this.expertiseName)
+        }
+      } else {
+        this.isExpertiseNameNotValid = true
+      }
+    },
+    removeExpertiseFromExpertises (element) {
+      const index = this.expertiseNames.findIndex((obj) => obj === element)
+      this.expertiseNames.splice(index, 1)
+    },
     saveExpertise () {
+      this.expertise.expertiseNames = this.expertiseNames
       if (this.expertise.subject && this.expertise.expertiseNames) {
-        if (!this.expertise.id) {
-          this.expertise.id = this.id
-          this.id = this.id + 1
+        const index = this.expertises.findIndex(
+          (obj) => obj.subject === this.expertise.subject
+        )
+        if (index === -1) {
           this.expertises.push(this.expertise)
         } else {
-          console.log('tests')
-          const index = this.expertises.findIndex(obj => obj.id === this.expertise.id)
           this.expertises[index] = this.expertise
         }
-
-        this.isExpertise = !this.isExpertise
-        this.expertise = {}
+        this.request.objectType = 'EXP'
+        this.request.object = JSON.stringify(this.expertises)
+        return new Promise((resolve, reject) => {
+          axios({
+            url: UrlConstant.SET_ADMIN_OBJECT,
+            data: this.request,
+            method: 'POST'
+          })
+            .then((resp) => {
+              this.isExpertise = !this.isExpertise
+              this.expertise = {}
+              this.expertiseNames = []
+              this.expertiseName = ''
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        })
       } else {
         this.isSaveExpertiseNotValid = true
       }
     },
     edit (element) {
       this.expertise.subject = element.subject
-      this.expertise.expertiseNames = element.expertiseNames
+      this.expertiseNames = element.expertiseNames
       this.expertise.id = element.id
       this.isExpertise = false
     }
+  },
+  beforeMount () {
+    return new Promise((resolve, reject) => {
+      axios({
+        url: UrlConstant.GET_ADMIN_OBJECT + 'EXP',
+        data: this.request,
+        method: 'GET'
+      })
+        .then((resp) => {
+          if (resp.data) {
+            console.log(JSON.parse(resp.data.object))
+            this.expertises = JSON.parse(resp.data.object)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    })
   }
 }
 </script>

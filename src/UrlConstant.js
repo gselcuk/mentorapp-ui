@@ -2,6 +2,7 @@ const LOCAL_URL = 'http://localhost:8080'
 const EXPERTISE = '/expertise'
 const USER = '/user'
 const SESSION = '/session'
+const ADMIN = '/admin'
 const USER_AUTH = LOCAL_URL + USER + '/authenticate'
 const JOIN_RELATION = LOCAL_URL + EXPERTISE + '/join-relation'
 const BE_MENTOR = LOCAL_URL + EXPERTISE + '/be-mentor'
@@ -9,6 +10,8 @@ const SEARCH_EXPERTISE = LOCAL_URL + EXPERTISE + '/search/'
 const GET_EXPERTISE = LOCAL_URL + EXPERTISE + '/get/'
 const SET_NEXT_SESSION = LOCAL_URL + EXPERTISE + SESSION + '/set'
 const GET_SESSION_INFO = LOCAL_URL + EXPERTISE + SESSION + '/get/'
+const SET_ADMIN_OBJECT = LOCAL_URL + ADMIN + '/set-admin-object'
+const GET_ADMIN_OBJECT = LOCAL_URL + ADMIN + '/get-admin-object/'
 
 export default {
   JOIN_RELATION: JOIN_RELATION,
@@ -17,5 +20,7 @@ export default {
   GET_EXPERTISE: GET_EXPERTISE,
   USER_AUTH: USER_AUTH,
   SET_NEXT_SESSION: SET_NEXT_SESSION,
-  GET_SESSION_INFO: GET_SESSION_INFO
+  GET_SESSION_INFO: GET_SESSION_INFO,
+  SET_ADMIN_OBJECT: SET_ADMIN_OBJECT,
+  GET_ADMIN_OBJECT: GET_ADMIN_OBJECT
 }
