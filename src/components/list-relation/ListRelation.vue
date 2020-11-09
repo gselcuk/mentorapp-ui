@@ -58,12 +58,12 @@ export default {
   data () {
     return {
       fields: [
-        'mentorLeaderName',
-        'subjects',
-        'menteeCount',
-        'startDate',
-        'phase',
-        'show_details'
+        {key: 'mentorLeaderName', sortable: true},
+        {key: 'subjects', sortable: true},
+        {key: 'menteeCount', sortable: true},
+        {key: 'startDate', sortable: true},
+        {key: 'phase', sortable: true},
+        {key: 'show_details'}
       ],
       items: [],
       item: {},
@@ -117,7 +117,6 @@ export default {
         }).then((resp) => {
           if (resp.data.listRelation) {
             this.size = resp.data.listRelation.length
-            console.log(this.size)
             resp.data.listRelation.forEach((relation) => {
               this.item = {}
               this.item.expertiseAreas = []
@@ -199,9 +198,9 @@ export default {
       this.method = 'POST'
       this.request.expertiseNames = []
       this.request.admin = localStorage.getItem('isAdmin')
-      if (expertises.state) {
+      if (expertises.state.length) {
         expertises.state.forEach((expertise) => {
-          this.request.expertiseNames.push(expertise.name)
+          this.request.expertiseNames.push(expertise.expertiseName)
         })
       }
     } else {

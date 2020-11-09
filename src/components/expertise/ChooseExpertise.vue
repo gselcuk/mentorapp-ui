@@ -9,33 +9,11 @@
           type="button"
           class="btn btn-secondary"
           variant="dark"
-          v-on:click="fillDatabase"
-          >Database</b-button
+          v-for="element in expertises"
+          :key="element.subject"
+          @click="fillSubjects(element.expertiseNames,element.subject)"
+          >{{ element.subject }}</b-button
         >
-        <b-button
-          type="button"
-          class="btn btn-secondary"
-          variant="dark"
-          v-on:click="fillProgrammingLanguages"
-        >
-          Programming Languages
-        </b-button>
-        <b-button
-          type="button"
-          class="btn btn-secondary"
-          variant="dark"
-          v-on:click="fillFrameworks"
-        >
-          Javascript Frameworks
-        </b-button>
-        <b-button
-          type="button"
-          class="btn btn-secondary"
-          variant="dark"
-          v-on:click="fillOthers"
-        >
-          Others
-        </b-button>
       </div>
       <div class="row mt-4">
         <div class="col-6">
@@ -49,9 +27,9 @@
             <div
               class="list-group-item"
               v-for="element in yourExpertises"
-              :key="element.name"
+              :key="element.expertiseName"
             >
-              {{ element.name }}
+              {{ element.expertiseName }}
             </div>
           </draggable>
         </div>
@@ -67,9 +45,9 @@
             <div
               class="list-group-item"
               v-for="element in allExpertises"
-              :key="element.name"
+              :key="element.expertiseName"
             >
-              {{ element.name }}
+              {{ element.expertiseName }}
             </div>
           </draggable>
         </div>
@@ -131,6 +109,8 @@ import draggable from 'vuedraggable'
 import expertises from '../../state/expertises'
 import usertype from '../../state/usertype'
 import listrelation from '../../state/list-relation'
+import axios from 'axios'
+import UrlConstant from '../../UrlConstant'
 
 export default {
   name: 'ChooseExpertise',
@@ -143,77 +123,25 @@ export default {
     return {
       emptyExpertiseList: false,
       fullExpertises: false,
+      expertises: [],
       yourExpertises: [],
       keywords: [],
       isMentor: usertype.state === 'MENTOR',
-      allExpertises: [{ name: 'Choose expertise from above', id: 0 }],
-      languageList: [
-        { name: 'Java', id: 8 },
-        { name: '.NET', id: 9 },
-        { name: 'C', id: 10 },
-        { name: 'C++', id: 11 },
-        { name: 'COBOL', id: 12 }
-      ],
-      frameworkList: [
-        { name: 'nodeJs', id: 13 },
-        { name: 'vueJs', id: 14 },
-        { name: 'Angular', id: 15 },
-        { name: 'React', id: 16 }
-      ],
-      databaseList: [
-        { name: 'Oracle', id: 17 },
-        { name: 'Couchbase', id: 18 },
-        { name: 'MongoDB', id: 19 },
-        { name: 'CassandraDB', id: 20 },
-        { name: 'DynamoDB', id: 21 }
-      ],
-      otherList: [
-        { name: 'Apache Kafka', id: 22 },
-        { name: 'Redis', id: 23 },
-        { name: 'RabbitMQ', id: 24 },
-        { name: 'Docker', id: 25 },
-        { name: 'Jenkins', id: 26 }
-      ]
+      allExpertises: [{ expertiseName: 'Choose expertise from above', id: 0 }]
     }
   },
   methods: {
     log: function (evt) {
       window.console.log(evt)
     },
-    fillDatabase: function (evt) {
+    fillSubjects (expertises, subject) {
       this.allExpertises.length = 0
-      this.databaseList.forEach((element) => {
-        if (!this.yourExpertises.includes(element)) {
-          element.category = 'Database'
-          this.allExpertises.push(element)
-        }
-      })
-    },
-    fillProgrammingLanguages: function (evt) {
-      this.allExpertises.length = 0
-      this.languageList.forEach((element) => {
-        element.category = 'Language'
-        if (!this.yourExpertises.includes(element)) {
-          this.allExpertises.push(element)
-        }
-      })
-    },
-    fillFrameworks: function (evt) {
-      this.allExpertises.length = 0
-      this.frameworkList.forEach((element) => {
-        element.category = 'Framework'
-
-        if (!this.yourExpertises.includes(element)) {
-          this.allExpertises.push(element)
-        }
-      })
-    },
-    fillOthers: function (evt) {
-      this.allExpertises.length = 0
-      this.otherList.forEach((element) => {
-        element.category = 'Other'
-        if (!this.yourExpertises.includes(element)) {
-          this.allExpertises.push(element)
+      expertises.forEach((element) => {
+        const exprtse = {}
+        exprtse.category = subject
+        exprtse.expertiseName = element
+        if (!this.yourExpertises || this.yourExpertises.filter(x => x.expertiseName === element).length === 0) {
+          this.allExpertises.push(exprtse)
         }
       })
     },
@@ -264,6 +192,24 @@ export default {
         return 'Search'
       }
     }
+  },
+  beforeMount () {
+    return new Promise((resolve, reject) => {
+      axios({
+        url: UrlConstant.GET_ADMIN_OBJECT + 'EXP',
+        data: this.request,
+        method: 'GET'
+      })
+        .then((resp) => {
+          if (resp.data) {
+            console.log(JSON.parse(resp.data.object))
+            this.expertises = JSON.parse(resp.data.object)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    })
   }
 }
 </script>

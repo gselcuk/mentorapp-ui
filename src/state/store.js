@@ -5,6 +5,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import UrlConstant from '../UrlConstant'
+import expertises from '../state/expertises'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -69,6 +70,7 @@ export default new Vuex.Store({
         localStorage.removeItem('userName')
         localStorage.removeItem('isAdmin')
         delete axios.defaults.headers.common['Authorization']
+        expertises.state = {}
         resolve()
       })
     }

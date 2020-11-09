@@ -143,11 +143,10 @@ export default {
       this.isExpertise = !this.isExpertise
     },
     addExpertiseToExpertises () {
-      if (this.expertiseName) {
+      if (this.expertiseName !== '') {
         const index = this.expertiseNames.findIndex(
           (obj) => obj === this.expertiseName
         )
-        console.log(index)
         if (index === -1) {
           this.expertiseNames.push(this.expertiseName)
         }
@@ -161,7 +160,7 @@ export default {
     },
     saveExpertise () {
       this.expertise.expertiseNames = this.expertiseNames
-      if (this.expertise.subject && this.expertise.expertiseNames) {
+      if (this.expertise.subject && this.expertise.expertiseNames.length !== 0) {
         const index = this.expertises.findIndex(
           (obj) => obj.subject === this.expertise.subject
         )

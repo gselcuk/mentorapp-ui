@@ -10,8 +10,8 @@
           <b-card-group deck>
             <b-card
               v-for="element in yourExpertises"
-              :key="element.name"
-              :header="element.name"
+              :key="element.expertiseName"
+              :header="element.expertiseName"
               :footer="element.category"
             >
               <b-row class="mt-2">
@@ -104,7 +104,7 @@ export default {
       this.yourExpertises.forEach((element) => {
         this.expertise = {}
         this.expertise.category = element.category
-        this.expertise.expertiseName = element.name
+        this.expertise.expertiseName = element.expertiseName
         if (element.description) {
           this.expertise.expertiseDescription = element.description
         }
