@@ -118,22 +118,15 @@
                       v-for="session in sessionHistories"
                       :key="session.sessionDescription"
                     >
-                      <div class="row">
-                        <div class="col-8">
                           <h6>Date : {{ session.sessionDate }}</h6>
                           <h6>
                             Description : {{ session.sessionDescription }}
                           </h6>
                           <b-form-rating
                             :value="findRating(session.sessionRatings)"
-                            v-if="isMenteeInRelation"
+                            :readonly="!isMenteeInRelation"
+                            size="sm"
                           ></b-form-rating>
-                        </div>
-                        <div class="col-4">
-                          <b-button variant="primary">Rate</b-button>
-                        </div>
-                      </div>
-
                       <span class="border-bottom"></span>
                     </b-list-group-item>
                   </b-list-group>
@@ -210,8 +203,7 @@ export default {
       sessionDescription: 'stestestes',
       sessionDate: '',
       isDescriptionNotValid: false,
-      isDateNotValid: false,
-      isMenteeInRelation: false
+      isDateNotValid: false
     }
   },
   computed: {
@@ -227,6 +219,9 @@ export default {
         })
         return result
       }
+    },
+    isMenteeInRelation: function () {
+      return expertises.state.otherMentees.includes(localStorage.getItem('userName'))
     }
   },
   methods: {
