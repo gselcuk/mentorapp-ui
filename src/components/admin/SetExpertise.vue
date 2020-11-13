@@ -134,13 +134,19 @@ export default {
       isSaveExpertiseNotValid: false,
       expertiseName: '',
       request: {},
-      isExpertiseNameNotValid: false
+      isExpertiseNameNotValid: false,
+      state: 'ADD',
+      lastId: 0
     }
   },
   methods: {
     addExpertise () {
       this.isSaveExpertiseNotValid = false
       this.isExpertise = !this.isExpertise
+      this.expertiseSubject = ''
+      this.expertiseName = ''
+      this.expertiseNames = []
+      this.state = 'ADD'
     },
     addExpertiseToExpertises () {
       if (this.expertiseName !== '') {
@@ -160,16 +166,24 @@ export default {
     },
     saveExpertise () {
       this.expertise.expertiseNames = this.expertiseNames
-      if (this.expertise.subject && this.expertise.expertiseNames.length !== 0) {
+      if (
+        this.expertise.subject &&
+        this.expertise.expertiseNames.length !== 0
+      ) {
         const index = this.expertises.findIndex(
-          (obj) => obj.subject === this.expertise.subject
+          (obj) => obj.id === this.expertise.id
         )
-        if (index === -1) {
+        if (index === -1 && this.state === 'ADD') {
+          this.lastId = this.lastId + 1
+          this.expertise.id = this.lastId
           this.expertises.push(this.expertise)
         } else {
           this.expertises[index] = this.expertise
+          console.log(this.expertises)
         }
         this.request.objectType = 'EXP'
+        console.log(this.expertises)
+
         this.request.object = JSON.stringify(this.expertises)
         return new Promise((resolve, reject) => {
           axios({
@@ -192,6 +206,7 @@ export default {
       }
     },
     edit (element) {
+      this.state = 'EDIT'
       this.expertise.subject = element.subject
       this.expertiseNames = element.expertiseNames
       this.expertise.id = element.id
@@ -207,8 +222,8 @@ export default {
       })
         .then((resp) => {
           if (resp.data) {
-            console.log(JSON.parse(resp.data.object))
             this.expertises = JSON.parse(resp.data.object)
+            if (this.expertises) this.lastId = this.expertises.length
           }
         })
         .catch((err) => {

@@ -15,9 +15,6 @@
               :footer="element.category"
             >
               <b-row class="mt-2">
-                <b-col sm="2">
-                  <label for="textarea-default">Description:</label>
-                </b-col>
                 <b-col sm="10">
                   <b-form-textarea
                     id="textarea-default"
@@ -33,7 +30,7 @@
                   v-model="element.keywords"
                   tag-variant="primary"
                   tag-pills
-                  size="lg"
+                  size="sm"
                   separator=" "
                   placeholder="Enter new tags for expertises"
                 ></b-form-tags>

@@ -103,9 +103,15 @@
                   </b-alert>
                   <b-button
                     variant="primary"
-                    @click="setNextSession"
+                    @click="setNextSession('edit')"
                     v-if="isMentor"
-                    >Set next session</b-button
+                    >Edit</b-button
+                  >
+                    <b-button
+                    variant="primary"
+                    @click="setNextSession('next')"
+                    v-if="isMentor"
+                    >Set Next Session</b-button
                   >
                 </b-card>
               </b-card-group>
@@ -118,15 +124,16 @@
                       v-for="session in sessionHistories"
                       :key="session.sessionDescription"
                     >
-                          <h6>Date : {{ session.sessionDate }}</h6>
-                          <h6>
-                            Description : {{ session.sessionDescription }}
-                          </h6>
-                          <b-form-rating
-                            :value="findRating(session.sessionRatings)"
-                            :readonly="!isMenteeInRelation"
-                            size="sm"
-                          ></b-form-rating>
+                      <h6>Date : {{ session.sessionDate }}</h6>
+                      <h6>Description : {{ session.sessionDescription }}</h6>
+                      <b-form-rating
+                        v-model ="session.currentUserRating"
+                        :readonly="!isMenteeInRelation"
+                        size="sm"
+                        inline
+                        no-border
+                        @change="saveRating($event, session.sessionId)"
+                      ></b-form-rating>
                       <span class="border-bottom"></span>
                     </b-list-group-item>
                   </b-list-group>
@@ -164,6 +171,7 @@
 import expertises from '../../state/person-expertises'
 import axios from 'axios'
 import UrlConstant from '../../UrlConstant'
+import listrelation from '../../state/list-relation'
 
 export default {
   name: 'RelationDetail',
@@ -181,6 +189,7 @@ export default {
       creatorName: expertises.state.mentorLeaderName,
       subjects: expertises.state.subjects,
       request: {},
+      rateRequest: {},
       groupExpertiseRelation: {},
       startDate: expertises.state.startDate,
       isJoinEnable:
@@ -200,10 +209,11 @@ export default {
       currentSessionHistory: {},
       isSessionHistoryExist: false,
       otherMentees: this.findOtherMentees(),
-      sessionDescription: 'stestestes',
+      sessionDescription: '',
       sessionDate: '',
       isDescriptionNotValid: false,
-      isDateNotValid: false
+      isDateNotValid: false,
+      currentSessionId: ''
     }
   },
   computed: {
@@ -221,44 +231,73 @@ export default {
       }
     },
     isMenteeInRelation: function () {
-      return expertises.state.otherMentees.includes(localStorage.getItem('userName'))
+      return expertises.state.otherMentees.includes(
+        localStorage.getItem('userName')
+      )
     }
   },
   methods: {
+    saveRating (value, sessionId) {
+      this.rateRequest = {}
+      this.rateRequest.mentorGroupId = expertises.state.mentorGroupId
+      this.rateRequest.sessionId = sessionId
+      this.rateRequest.sessionRating = {}
+      this.rateRequest.sessionRating.rating = value
+      this.rateRequest.sessionRating.userId = localStorage.getItem('id')
+      console.log(this.rateRequest)
+      return new Promise((resolve, reject) => {
+        axios({
+          url: UrlConstant.RATE_SESSION,
+          data: this.rateRequest,
+          method: 'POST'
+        }).then((resp) => {
+        })
+      })
+    },
     findRating (sessionRatings) {
       if (sessionRatings) {
         sessionRatings.forEach((rating) => {
-          if (rating.userId === localStorage.getItem('userId')) { return rating.rating }
+          if (rating.userId === localStorage.getItem('id')) {
+            this.rating = rating.rating
+            console.log(this.rating)
+            return this.rating
+          }
         })
       }
     },
-    setNextSession () {
+    setNextSession (type) {
       if (!this.sessionDescription) {
         this.isDescriptionNotValid = true
       }
       if (!this.sessionDate) {
         this.isDateNotValid = true
       }
-      this.request = {}
-      this.request.mentorGroupId = localStorage.getItem('id')
-      this.request.sessionDescription = this.sessionDescription
-      this.request.sessionDate = this.sessionDate
 
-      return new Promise((resolve, reject) => {
-        axios({
-          url: UrlConstant.SET_NEXT_SESSION,
-          data: this.request,
-          method: 'POST'
-        }).then((resp) => {
-          if (resp.data.sessionHistory) {
-            this.sessionHistories = []
-            resp.data.sessionHistory.forEach((element) => {
-              this.isSessionHistoryExist = true
-              this.sessionHistories.push(element)
-            })
-          }
+      if (this.sessionDate && this.sessionDescription) {
+        this.request = {}
+        if (type === 'edit') {
+          console.log(this.currentSessionId)
+          this.request.currentSessionId = this.currentSessionId
+        }
+        this.request.mentorGroupId = localStorage.getItem('id')
+        this.request.sessionDescription = this.sessionDescription
+        this.request.sessionDate = this.sessionDate
+        return new Promise((resolve, reject) => {
+          axios({
+            url: UrlConstant.SET_NEXT_SESSION,
+            data: this.request,
+            method: 'POST'
+          }).then((resp) => {
+            if (resp.data.sessionHistory) {
+              this.sessionHistories = []
+              resp.data.sessionHistory.forEach((element) => {
+                this.isSessionHistoryExist = true
+                this.sessionHistories.push(element)
+              })
+            }
+          })
         })
-      })
+      }
     },
     findOtherMentees () {
       var result = ''
@@ -276,6 +315,7 @@ export default {
       }
     },
     backToList () {
+      listrelation.state = 'get'
       this.$router.push('/list-mentor')
     },
     joinMentee () {
@@ -304,27 +344,28 @@ export default {
     }
   },
   beforeMount () {
+    this.currentSessionId = ''
     expertises.state.expertiseAreas.forEach((element) => {
       this.item = {}
       this.item.expertiseName = element.expertiseName
       this.item.expertiseDescription = element.expertiseDescription
       this.items.push(this.item)
-      this.sessionHistories = []
-      return new Promise((resolve, reject) => {
-        axios({
-          url: UrlConstant.GET_SESSION_INFO + expertises.state.mentorGroupId,
-          method: 'GET'
-        }).then((resp) => {
-          console.log(resp.data.currentSession.sessionDescription)
-          this.sessionDate = resp.data.currentSession.sessionDate
-          this.sessionDescription = resp.data.currentSession.sessionDescription
-          if (resp.data.sessionHistory) {
-            this.isSessionHistoryExist = true
-            resp.data.sessionHistory.forEach((element) => {
-              this.sessionHistories.push(element)
-            })
-          }
-        })
+    })
+    this.sessionHistories = []
+    return new Promise((resolve, reject) => {
+      axios({
+        url: UrlConstant.GET_SESSION_INFO + localStorage.getItem('id') + '/' + expertises.state.mentorGroupId,
+        method: 'GET'
+      }).then((resp) => {
+        this.sessionDate = resp.data.currentSession.sessionDate
+        this.sessionDescription = resp.data.currentSession.sessionDescription
+        this.currentSessionId = resp.data.currentSession.sessionId
+        if (resp.data.sessionHistory) {
+          this.isSessionHistoryExist = true
+          resp.data.sessionHistory.forEach((element) => {
+            this.sessionHistories.push(element)
+          })
+        }
       })
     })
   }
