@@ -12,7 +12,7 @@
             :footer="element.subject"
           >
             <b-card-text>{{ element.expertiseNames }}</b-card-text>
-            <b-button @click="edit(element)" variant="primary">Edit</b-button>
+            <b-button @click="edit(element)" variant="dark">Edit</b-button>
           </b-card>
 
           <b-card
@@ -23,7 +23,7 @@
             <template #header>
               <h6 class="mb-0">Expertise Management</h6>
             </template>
-            <b-button @click="addExpertise" variant="primary"
+            <b-button @click="addExpertise" variant="dark"
               >Add Expertise</b-button
             >
             <template #footer>
@@ -112,7 +112,7 @@
             </div>
 
             <div class="mt-2">
-              <b-button @click="saveExpertise" variant="primary">Save</b-button>
+              <b-button @click="saveExpertise" variant="dark">Save</b-button>
             </div>
           </b-card>
         </b-card-group>
